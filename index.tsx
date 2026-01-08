@@ -5,7 +5,7 @@ import {
   LayoutDashboard, Mic, Settings, Sun, Moon, Users, Phone, MessageSquare, 
   Activity, History, Plus, Trash2, CheckCircle, X, Save, Play, PhoneOff, 
   Download, Edit, AlertCircle, Globe, BarChart3, ArrowRight, Brain, Volume2, 
-  Database, RefreshCw, Layers, Clock, Bell, Shield, Link as LinkIcon
+  Database, RefreshCw, Layers, Clock, Bell, Shield, Link as LinkIcon, FileAudio, Pause
 } from 'lucide-react';
 import { Chart } from 'react-chartjs-2';
 
@@ -79,6 +79,9 @@ interface Conversation {
   startedAt: number;
   durationSeconds: number;
   messages: Message[];
+  metadata?: {
+    recordingUrl?: string;
+  };
 }
 
 // --- Mock Data ---
@@ -115,11 +118,11 @@ const INITIAL_AGENTS: Agent[] = [
 const INITIAL_CONVERSATIONS: Conversation[] = [
   { 
     id: 'c1', agentId: '1', agentName: 'Customer Support Bot', channel: 'web', status: 'completed', startedAt: Date.now() - 120000, durationSeconds: 245,
-    messages: []
+    messages: [], metadata: { recordingUrl: '#' }
   },
   { id: 'c2', agentId: '1', agentName: 'Customer Support Bot', channel: 'phone', status: 'active', startedAt: Date.now() - 30000, durationSeconds: 30, messages: [] },
   { id: 'c3', agentId: '2', agentName: 'Sales Representative', channel: 'web', status: 'failed', startedAt: Date.now() - 3600000, durationSeconds: 12, messages: [] },
-  { id: 'c4', agentId: '1', agentName: 'Customer Support Bot', channel: 'phone', status: 'completed', startedAt: Date.now() - 7200000, durationSeconds: 520, messages: [] },
+  { id: 'c4', agentId: '1', agentName: 'Customer Support Bot', channel: 'phone', status: 'completed', startedAt: Date.now() - 7200000, durationSeconds: 520, messages: [], metadata: { recordingUrl: '#' } },
 ];
 
 // --- UI Components ---
@@ -353,6 +356,104 @@ const AgentBuilder: React.FC<{
     </div>
   );
 };
+
+// --- Call Logs View ---
+
+const CallLogsView: React.FC = () => {
+  const { t } = useI18n();
+  const [calls, setCalls] = useState<Conversation[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [playingId, setPlayingId] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    // In a real app, fetch from API. using Mock + API structure expectation
+    fetch('/api/conversations?limit=50')
+      .then(r => r.json())
+      .then(data => {
+        if (data.data) setCalls(data.data);
+        else setCalls(INITIAL_CONVERSATIONS); // Fallback
+      })
+      .catch(() => setCalls(INITIAL_CONVERSATIONS))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const handlePlay = (url: string, id: string) => {
+    if (playingId === id) {
+      audioRef.current?.pause();
+      setPlayingId(null);
+    } else {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      const audio = new Audio(url);
+      audio.onended = () => setPlayingId(null);
+      audio.play();
+      audioRef.current = audio;
+      setPlayingId(id);
+    }
+  };
+
+  return (
+    <div className="space-y-6 max-w-6xl mx-auto animate-in fade-in duration-500">
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight">{t('callLogs.title')}</h2>
+          <p className="text-muted-foreground mt-2">{t('callLogs.subtitle')}</p>
+        </div>
+        <Button variant="outline"><Download size={16} className="mr-2"/> {t('callLogs.exportCsv')}</Button>
+      </div>
+
+      <Card>
+        <CardContent className="p-0">
+          <div className="rounded-md border">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/50">
+                <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">{t('callLogs.table.status')}</th>
+                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">{t('callLogs.table.agent')}</th>
+                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">{t('callLogs.table.channel')}</th>
+                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">{t('callLogs.table.duration')}</th>
+                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">{t('callLogs.table.time')}</th>
+                  <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">{t('callLogs.table.actions')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {calls.map((call) => (
+                  <tr key={call.id} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                    <td className="p-4 align-middle">
+                      <Badge variant={call.status === 'active' ? 'success' : call.status === 'failed' ? 'destructive' : 'outline'}>
+                        {call.status}
+                      </Badge>
+                    </td>
+                    <td className="p-4 align-middle font-medium">{call.agentName}</td>
+                    <td className="p-4 align-middle capitalize">{call.channel}</td>
+                    <td className="p-4 align-middle">{call.durationSeconds ? `${Math.floor(call.durationSeconds / 60)}m ${call.durationSeconds % 60}s` : '-'}</td>
+                    <td className="p-4 align-middle">{new Date(call.startedAt).toLocaleString()}</td>
+                    <td className="p-4 align-middle text-right">
+                      {call.metadata?.recordingUrl && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className={playingId === call.id ? "text-primary bg-primary/10" : ""}
+                          onClick={() => handlePlay(call.metadata!.recordingUrl!, call.id)}
+                        >
+                          {playingId === call.id ? <Pause size={16} /> : <Play size={16} />}
+                          <span className="ml-2">{playingId === call.id ? 'Stop' : 'Play Recording'}</span>
+                        </Button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {calls.length === 0 && <div className="p-8 text-center text-muted-foreground">No calls found.</div>}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
 
 // --- Settings View ---
 
@@ -794,6 +895,7 @@ const AppContent: React.FC = () => {
   const navItems = [
     { id: 'dashboard', label: t('nav.dashboard'), icon: LayoutDashboard },
     { id: 'agents', label: t('nav.agents'), icon: Users },
+    { id: 'call-logs', label: t('nav.callLogs'), icon: FileAudio },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
     { id: 'settings', label: t('nav.settings'), icon: Settings },
   ];
@@ -819,6 +921,7 @@ const AppContent: React.FC = () => {
       <main className="flex-1 p-8 overflow-y-auto bg-muted/10 h-screen">
         {activeTab === 'dashboard' && <DashboardView agents={agents} conversations={INITIAL_CONVERSATIONS} />}
         {activeTab === 'agents' && <AgentsView agents={agents} onSave={(a) => setAgents(p => [...p.filter(x => x.id !== a.id), a])} onDelete={(id) => setAgents(p => p.filter(x => x.id !== id))} />}
+        {activeTab === 'call-logs' && <CallLogsView />}
         {activeTab === 'analytics' && <AnalyticsView />}
         {activeTab === 'settings' && <SettingsView />}
       </main>
