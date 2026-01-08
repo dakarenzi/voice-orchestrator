@@ -117,7 +117,7 @@
                         >
                             <div
                                 class={`w-4 h-4 rounded-full bg-white transition-transform ${notifications.failure ? "translate-x-4" : ""}`}
-                            />
+                            ></div>
                         </button>
                     </div>
                 </div>
