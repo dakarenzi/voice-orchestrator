@@ -1,7 +1,7 @@
 
 <script lang="ts">
   import { builderStore } from '$lib/stores/agentBuilder';
-  import { Volume2, Play } from 'lucide-react';
+  import { Volume2, Play } from 'lucide-svelte';
 
   // Mock voice lists
   const voices = {

@@ -1,7 +1,7 @@
 
 <script lang="ts">
   import { builderStore } from '$lib/stores/agentBuilder';
-  import { Mic, Settings2 } from 'lucide-react';
+  import { Mic, Settings2 } from 'lucide-svelte';
 </script>
 
 <div class="space-y-6">

@@ -1,7 +1,7 @@
 
 <script lang="ts">
   import { builderStore } from '$lib/stores/agentBuilder';
-  import { Brain, Sparkles } from 'lucide-react';
+  import { Brain, Sparkles } from 'lucide-svelte';
 </script>
 
 <div class="space-y-6">

@@ -1,7 +1,7 @@
 
 <script lang="ts">
   import { builderStore } from '$lib/stores/agentBuilder';
-  import { Phone, Globe, MessageCircle } from 'lucide-react';
+  import { Phone, Globe, MessageCircle } from 'lucide-svelte';
 
   // In a real app, this might be part of the Agent object, 
   // currently the types.ts Agent interface doesn't explicitly store 'channel' 
