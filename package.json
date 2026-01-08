@@ -15,7 +15,8 @@
     "svelte": "^5.46.1",
     "@sveltejs/kit": "^2.49.3",
     "zod": "^4.3.5",
-    "react-chartjs-2": "latest"
+    "react-chartjs-2": "latest",
+    "@tsndr/cloudflare-worker-jwt": "^3.2.1"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

@@ -1,8 +1,8 @@
 
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { logger } from '$utils/logger';
-import { TelnyxService } from '$services/telnyx';
+import { logger } from '$lib/utils/logger';
+import { TelnyxService } from '$lib/services/telnyx';
 
 export const POST: RequestHandler = async ({ request, platform }) => {
   const signature = request.headers.get('telnyx-signature-ed25519');
@@ -18,7 +18,6 @@ export const POST: RequestHandler = async ({ request, platform }) => {
   const payload = JSON.parse(body);
   const event = payload.data.event_type;
   const callControlId = payload.data.payload.call_control_id;
-  const fromNumber = payload.data.payload.from;
   const toNumber = payload.data.payload.to;
 
   logger.info(`Received Telnyx Event: ${event}`, { callControlId });
@@ -53,17 +52,11 @@ export const POST: RequestHandler = async ({ request, platform }) => {
 
       case 'call.answered':
         // 4. Start Media Stream
-        // We tell Telnyx to stream audio to our WebSocket endpoint
         const streamUrl = `wss://${new URL(request.url).host}/api/voice/stream`;
         await telnyx.startStreaming(callControlId, streamUrl, {
           track: 'both_tracks',
           bidirectional: true
         });
-        
-        // 5. Speak Greeting
-        // In a real flow, this might come from the Agent config or LLM initial prompt
-        // Here we just trigger a greeting to start the interaction
-        // Note: With bidirectional streaming, we might send audio via WS instead of using telnyx.speak
         break;
 
       case 'call.hangup':
@@ -75,7 +68,6 @@ export const POST: RequestHandler = async ({ request, platform }) => {
     }
   } catch (err: any) {
     logger.error('Error processing webhook', { error: err.message });
-    // Attempt to hangup gracefully if possible
     try { await telnyx.hangup(callControlId); } catch(e) {}
     return json({ error: err.message }, { status: 500 });
   }

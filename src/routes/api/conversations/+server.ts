@@ -1,6 +1,7 @@
+
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { logger } from '$utils/logger';
+import { logger } from '$lib/utils/logger';
 import { CreateConversationSchema } from '$lib/utils/validation';
 import type { Conversation } from '$lib/types';
 

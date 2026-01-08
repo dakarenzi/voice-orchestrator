@@ -1,6 +1,7 @@
+
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { logger } from '$utils/logger';
+import { logger } from '$lib/utils/logger';
 import type { Conversation, Message } from '$lib/types';
 
 export const GET: RequestHandler = async ({ platform, params }) => {
