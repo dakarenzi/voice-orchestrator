@@ -15,7 +15,7 @@
             </h2>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mb-12">
             {#each integrations.partners as partner, i}
                 <div
                     class="flex justify-center"
