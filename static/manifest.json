@@ -1,0 +1,15 @@
+{
+    "name": "VoiceOrchestrator",
+    "short_name": "VO",
+    "theme_color": "#6366f1",
+    "background_color": "#0a0a0a",
+    "display": "standalone",
+    "start_url": "/",
+    "icons": [
+        {
+            "src": "/favicon.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        }
+    ]
+}

@@ -1,0 +1,161 @@
+{
+    "id": "template_hotel_booking_001",
+    "name": "Hotel Concierge & Booking",
+    "slug": "hospitality-hotel-booking",
+    "industry": "hospitality",
+    "useCase": "reservation",
+    "description": "Manage room reservations and guest services requests.",
+    "tags": [
+        "hospitality",
+        "hotel",
+        "concierge"
+    ],
+    "featured": false,
+    "isPublic": true,
+    "createdBy": "system",
+    "usageCount": 0,
+    "exampleConversation": [
+        {
+            "role": "user",
+            "content": "Do you have rooms for this weekend?"
+        },
+        {
+            "role": "agent",
+            "content": "Let me check availability for you. How many nights were you planning to stay?"
+        }
+    ],
+    "channels": {
+        "voice": {
+            "enabled": true,
+            "inbound": {
+                "provider": "telnyx",
+                "greeting": "Hello, how can I help you?",
+                "holdMusic": "",
+                "transferEnabled": true
+            },
+            "outbound": {
+                "enabled": false,
+                "consentRequired": true
+            }
+        },
+        "chat": {
+            "enabled": true,
+            "webWidget": {
+                "position": "bottom-right",
+                "theme": "auto",
+                "welcomeMessage": "Hi! How can I help?"
+            },
+            "typing": {
+                "showTypingIndicator": true,
+                "responseDelayMs": 600
+            }
+        },
+        "whatsapp": {
+            "enabled": true,
+            "businessProfile": {
+                "greeting": "Hello!",
+                "businessHours": null
+            }
+        },
+        "social": {
+            "twitter": {
+                "enabled": false
+            },
+            "discord": {
+                "enabled": false
+            },
+            "telegram": {
+                "enabled": false
+            }
+        }
+    },
+    "behavior": {
+        "systemPrompt": "ROLE: Front Desk Agent for [Hotel Name].\n\nSERVICES:\n1. Reservations: Check dates, room types (King, Double, Suite), and number of guests.\n2. Concierge: Recommendations for dining, transport.\n3. Housekeeping requests: Towels, toiletries.\n\nPOLICIES:\n- Check-in: 3 PM, Check-out: 11 AM.\n- Pet policy: [Insert Policy].\n\nUPSELL:\n- Offer room upgrades or breakfast packages if availability exists.",
+        "tone": [
+            "polished",
+            "accommodating",
+            "refined"
+        ],
+        "fallbackRules": "Connect to Front Desk Manager.",
+        "escalationTriggers": [
+            "Group booking (>5 rooms)",
+            "Complaint",
+            "Billing dispute"
+        ],
+        "maxTurns": 10
+    },
+    "voice": {
+        "provider": "elevenlabs",
+        "voiceId": "voice_profile_calm_female_001",
+        "voicePreview": "",
+        "alternativeVoices": [],
+        "settings": {
+            "stability": 0.5,
+            "similarity": 0.75,
+            "speed": 1,
+            "pitch": 0
+        },
+        "sttConfig": {
+            "provider": "deepgram",
+            "language": "en-US",
+            "model": "nova-2",
+            "punctuate": true,
+            "profanityFilter": false
+        }
+    },
+    "knowledgeBase": {
+        "preSeededFAQs": [],
+        "intents": [],
+        "entities": [],
+        "documents": {
+            "sampleDocs": [],
+            "requiredDocs": [
+                "Hotel Amenities Guide"
+            ]
+        },
+        "vectorStore": {
+            "provider": "cloudflare-vectorize",
+            "preIndexed": false
+        }
+    },
+    "integrations": {
+        "custom": {
+            "apiEndpoints": []
+        }
+    },
+    "visual": {
+        "avatar": {
+            "type": "image",
+            "url": ""
+        },
+        "branding": {
+            "primaryColor": "#000000",
+            "accentColor": "#ffffff"
+        }
+    },
+    "testing": {
+        "testScenarios": [],
+        "demoWebWidget": ""
+    },
+    "analytics": {
+        "preConfiguredDashboard": {
+            "name": "Default",
+            "widgets": []
+        },
+        "kpis": [],
+        "alertThresholds": []
+    },
+    "compliance": {
+        "dataRetention": {
+            "conversationLogs": 30,
+            "audioRecordings": 30,
+            "piiHandling": "mask"
+        },
+        "certifications": []
+    },
+    "customization": {
+        "required": [],
+        "optional": [],
+        "validation": []
+    }
+}

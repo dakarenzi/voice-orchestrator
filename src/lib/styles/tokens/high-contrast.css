@@ -1,0 +1,113 @@
+/* High-Contrast Mode - Maximum visibility and WCAG AAA compliance */
+[data-theme='high-contrast'] {
+    /* Backgrounds - True black for maximum contrast */
+    --color-bg-default: #000000;
+    --color-bg-surface: #000000;
+    --color-bg-surface-raised: #1a1a1a;
+    --color-bg-overlay: rgba(0, 0, 0, 0.98);
+    --color-bg-accent-subtle: rgba(255, 255, 255, 0.1);
+
+    /* Text - Pure white for maximum readability */
+    --color-text-primary: #ffffff;
+    --color-text-secondary: #e5e5e5;
+    --color-text-muted: #b3b3b3;
+    --color-text-inverse: #000000;
+    --color-text-accent: #a5b4fc;
+
+    /* Borders - Stronger, more visible */
+    --color-border-default: #525252;
+    --color-border-subtle: #404040;
+    --color-border-strong: #737373;
+
+    /* Accents - Brighter, more saturated */
+    --color-accent-primary: #818cf8;
+    --color-accent-primary-hover: #a5b4fc;
+    --color-accent-soft: #c7d2fe;
+
+    /* Status - High visibility with increased saturation */
+    --color-status-success: #4ade80;
+    --color-status-success-bg: rgba(74, 222, 128, 0.2);
+    --color-status-warning: #fbbf24;
+    --color-status-warning-bg: rgba(251, 191, 36, 0.2);
+    --color-status-error: #f87171;
+    --color-status-error-bg: rgba(248, 113, 113, 0.2);
+    --color-status-info: #60a5fa;
+    --color-status-info-bg: rgba(96, 165, 250, 0.2);
+
+    /* Agent states - Maximum distinction */
+    --color-agent-active: #4ade80;
+    --color-agent-idle: #a3a3a3;
+    --color-agent-error: #f87171;
+    --color-agent-training: #fbbf24;
+
+    /* Call states - Highly visible */
+    --color-call-incoming: #60a5fa;
+    --color-call-active: #4ade80;
+    --color-call-ended: #a3a3a3;
+
+    /* Shadows - Replaced with borders for true black background */
+    --elevation-shadow-sm: 0 0 0 1px rgba(255, 255, 255, 0.15);
+    --elevation-shadow-md: 0 0 0 2px rgba(255, 255, 255, 0.2);
+    --elevation-shadow-lg: 0 0 0 3px rgba(255, 255, 255, 0.25);
+    --elevation-shadow-xl: 0 0 0 4px rgba(255, 255, 255, 0.3);
+
+    /* Focus states - Extra visible for keyboard navigation */
+    --color-focus-ring: #a5b4fc;
+    --color-focus-ring-offset: #000000;
+}
+
+/* Enhanced focus visibility for high-contrast mode */
+[data-theme='high-contrast'] *:focus-visible {
+    outline: 3px solid var(--color-focus-ring) !important;
+    outline-offset: 3px !important;
+    box-shadow: 0 0 0 6px var(--color-focus-ring-offset),
+        0 0 0 9px var(--color-focus-ring) !important;
+}
+
+/* Ensure text remains readable in all states */
+[data-theme='high-contrast'] ::selection {
+    background-color: #818cf8;
+    color: #000000;
+}
+
+/* Increase contrast for disabled states */
+[data-theme='high-contrast'] :disabled,
+[data-theme='high-contrast'] [aria-disabled='true'] {
+    opacity: 0.7;
+    /* Slightly higher opacity for visibility */
+    cursor: not-allowed;
+    border: 2px dashed #525252 !important;
+}
+
+/* Stronger borders for better visual separation */
+[data-theme='high-contrast'] .card,
+[data-theme='high-contrast'] .table-container,
+[data-theme='high-contrast'] .input,
+[data-theme='high-contrast'] button {
+    border-width: 2px !important;
+}
+
+/* Pattern backgrounds for status (not just color) */
+[data-theme='high-contrast'] .status-success::before {
+    content: '✓';
+    margin-right: 0.5rem;
+    font-weight: bold;
+}
+
+[data-theme='high-contrast'] .status-error::before {
+    content: '✕';
+    margin-right: 0.5rem;
+    font-weight: bold;
+}
+
+[data-theme='high-contrast'] .status-warning::before {
+    content: '⚠';
+    margin-right: 0.5rem;
+    font-weight: bold;
+}
+
+[data-theme='high-contrast'] .status-info::before {
+    content: 'ℹ';
+    margin-right: 0.5rem;
+    font-weight: bold;
+}

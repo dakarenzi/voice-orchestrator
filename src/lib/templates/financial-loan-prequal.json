@@ -1,0 +1,161 @@
+{
+    "id": "template_loan_prequal_001",
+    "name": "Loan Pre-Qualification Bot",
+    "slug": "financial-loan-prequal",
+    "industry": "financial",
+    "useCase": "lead-qualification",
+    "description": "Gather initial financial data to assess loan eligibility.",
+    "tags": [
+        "financial",
+        "banking",
+        "loans"
+    ],
+    "featured": false,
+    "isPublic": true,
+    "createdBy": "system",
+    "usageCount": 0,
+    "exampleConversation": [
+        {
+            "role": "user",
+            "content": "What are your mortgage rates?"
+        },
+        {
+            "role": "agent",
+            "content": "Rates vary based on credit and loan term. To give you an accurate estimate, I just need to ask a few quick questions. Is that okay?"
+        }
+    ],
+    "channels": {
+        "voice": {
+            "enabled": true,
+            "inbound": {
+                "provider": "telnyx",
+                "greeting": "Hello, how can I help you?",
+                "holdMusic": "",
+                "transferEnabled": true
+            },
+            "outbound": {
+                "enabled": false,
+                "consentRequired": true
+            }
+        },
+        "chat": {
+            "enabled": true,
+            "webWidget": {
+                "position": "bottom-right",
+                "theme": "auto",
+                "welcomeMessage": "Hi! How can I help?"
+            },
+            "typing": {
+                "showTypingIndicator": true,
+                "responseDelayMs": 600
+            }
+        },
+        "whatsapp": {
+            "enabled": false,
+            "businessProfile": {
+                "greeting": "Hello!",
+                "businessHours": null
+            }
+        },
+        "social": {
+            "twitter": {
+                "enabled": false
+            },
+            "discord": {
+                "enabled": false
+            },
+            "telegram": {
+                "enabled": false
+            }
+        }
+    },
+    "behavior": {
+        "systemPrompt": "ROLE: Loan Officer Assistant for [Bank/Lender].\n\nGOAL: Collect basic info for Mortgage or Personal Loan pre-qual.\n\nDATA POINTS:\n- Loan Amount\n- Purpose (House, Consolidation, etc.)\n- Employment Status\n- Est. Credit Score (Excellent >720, Good >680, etc.)\n\nCOMPLIANCE:\n- Ask for consent to run soft credit check if applicable.\n- 'I am not a financial advisor. Rates subject to change.'\n- Secure handling of income data.",
+        "tone": [
+            "professional",
+            "secure",
+            "trustworthy"
+        ],
+        "fallbackRules": "Refer to online application form.",
+        "escalationTriggers": [
+            "Complex income (Self-employed)",
+            "Credit denial explanation",
+            "Rate negotiation"
+        ],
+        "maxTurns": 15
+    },
+    "voice": {
+        "provider": "elevenlabs",
+        "voiceId": "voice_profile_professional_female_001",
+        "voicePreview": "",
+        "alternativeVoices": [],
+        "settings": {
+            "stability": 0.5,
+            "similarity": 0.75,
+            "speed": 1,
+            "pitch": 0
+        },
+        "sttConfig": {
+            "provider": "deepgram",
+            "language": "en-US",
+            "model": "nova-2",
+            "punctuate": true,
+            "profanityFilter": false
+        }
+    },
+    "knowledgeBase": {
+        "preSeededFAQs": [],
+        "intents": [],
+        "entities": [],
+        "documents": {
+            "sampleDocs": [],
+            "requiredDocs": [
+                "Current Rate Sheet"
+            ]
+        },
+        "vectorStore": {
+            "provider": "cloudflare-vectorize",
+            "preIndexed": false
+        }
+    },
+    "integrations": {
+        "custom": {
+            "apiEndpoints": []
+        }
+    },
+    "visual": {
+        "avatar": {
+            "type": "image",
+            "url": ""
+        },
+        "branding": {
+            "primaryColor": "#000000",
+            "accentColor": "#ffffff"
+        }
+    },
+    "testing": {
+        "testScenarios": [],
+        "demoWebWidget": ""
+    },
+    "analytics": {
+        "preConfiguredDashboard": {
+            "name": "Default",
+            "widgets": []
+        },
+        "kpis": [],
+        "alertThresholds": []
+    },
+    "compliance": {
+        "dataRetention": {
+            "conversationLogs": 30,
+            "audioRecordings": 30,
+            "piiHandling": "mask"
+        },
+        "certifications": []
+    },
+    "customization": {
+        "required": [],
+        "optional": [],
+        "validation": []
+    }
+}

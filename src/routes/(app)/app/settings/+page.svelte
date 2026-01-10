@@ -29,8 +29,10 @@
 <div class="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
     <div class="flex justify-between items-center">
         <div>
-            <h2 class="text-3xl font-bold tracking-tight">Settings</h2>
-            <p class="text-muted-foreground mt-2">
+            <h2 class="text-3xl font-bold tracking-tight text-txt-primary">
+                Settings
+            </h2>
+            <p class="text-txt-muted mt-2">
                 Manage your organization and integrations.
             </p>
         </div>
@@ -82,7 +84,7 @@
                             >Copy</Button
                         >
                     </div>
-                    <p class="text-xs text-muted-foreground">
+                    <p class="text-xs text-txt-muted">
                         Endpoints for inbound Telnyx calls.
                     </p>
                 </div>
@@ -97,26 +99,26 @@
             </CardHeader>
             <CardContent class="space-y-4">
                 <div
-                    class="flex items-center justify-between p-3 border rounded-lg"
+                    class="flex items-center justify-between p-3 border border-brd-default rounded-lg"
                 >
                     <div>
                         <p class="font-medium">Call Failures</p>
-                        <p class="text-xs text-muted-foreground">
+                        <p class="text-xs text-txt-muted">
                             Notify when a call ends with an error.
                         </p>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="text-sm text-muted-foreground"
+                        <span class="text-sm text-txt-muted"
                             >{notifications.failure ? "On" : "Off"}</span
                         >
                         <button
                             onclick={() =>
                                 (notifications.failure =
                                     !notifications.failure)}
-                            class={`w-10 h-6 rounded-full p-1 transition-colors ${notifications.failure ? "bg-primary" : "bg-muted"}`}
+                            class={`w-10 h-6 rounded-full p-1 transition-colors ${notifications.failure ? "bg-acn-primary" : "bg-bg-badge-default"}`}
                         >
                             <div
-                                class={`w-4 h-4 rounded-full bg-white transition-transform ${notifications.failure ? "translate-x-4" : ""}`}
+                                class={`w-4 h-4 rounded-full bg-txt-inverse transition-transform ${notifications.failure ? "translate-x-4" : ""}`}
                             ></div>
                         </button>
                     </div>

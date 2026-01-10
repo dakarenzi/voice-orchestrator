@@ -1,0 +1,507 @@
+
+import type { AgentTemplate } from '$lib/types/template';
+
+export const ecommerceSupportTemplate: AgentTemplate = {
+    id: "ecom-support-001",
+    name: "E-Commerce Support Specialist",
+    slug: "ecommerce-support-voice",
+    category: "customer-support",
+    industry: ["retail", "ecommerce", "d2c"],
+    description: "Handle order inquiries, returns, and shipping questions 24/7",
+    longDescription: `
+    A fully-configured AI agent that handles common e-commerce support queries including:
+    - Order status tracking
+    - Return and refund requests
+    - Shipping questions
+    - Product availability
+    - Account management
+    
+    Pre-integrated with Shopify, WooCommerce, and Stripe. Escalates complex issues to human agents.
+  `,
+    complexity: "intermediate",
+    featured: true,
+
+    behavior: {
+        goal: "Resolve customer inquiries about orders, returns, and products while maintaining brand voice",
+        personality: {
+            tone: "friendly",
+            pacing: "moderate",
+            verbosity: "balanced",
+            emotionalRange: "expressive"
+        },
+        systemPrompt: `You are {{agentName}}, a customer support specialist for {{companyName}}, 
+    an e-commerce business selling {{productCategory}}.
+
+    YOUR PERSONALITY:
+    - Warm, helpful, and solution-oriented
+    - Empathetic when customers are frustrated
+    - Clear and concise in explanations
+    - Proactive in offering solutions
+
+    YOUR CAPABILITIES:
+    - Track orders using order number or email
+    - Process return requests for items within {{returnWindow}} days
+    - Answer questions about shipping times and policies
+    - Help with account login issues
+    - Provide product information
+
+    IMPORTANT RULES:
+    - Never promise refunds over \${{maxRefundAmount}} without manager approval
+    - Always verify identity before discussing order details
+    - If customer is angry, stay calm and empathetic
+    - Escalate to human if: legal threat, severe complaint, or complex technical issue
+    
+    COMPANY POLICIES:
+    - Free shipping on orders over \${{freeShippingThreshold}}
+    - {{returnWindow}}-day return window
+    - Refunds processed within {{refundDays}} business days
+    
+    Always start by asking for the order number or email to look up their information.`,
+
+        guardrails: {
+            neverDiscuss: [
+                "pricing changes without manager approval",
+                "other customers' orders",
+                "internal company matters",
+                "competitor comparisons"
+            ],
+            alwaysEscalateTo: [
+                "refund requests over $500",
+                "legal threats or lawyer mentions",
+                "defective product injuries",
+                "media inquiries",
+                "unresolved issues after 3 attempts"
+            ],
+            complianceRules: [
+                {
+                    type: "GDPR",
+                    description: "Never store personal data without consent",
+                    action: "request_consent_before_processing"
+                },
+                {
+                    type: "PCI-DSS",
+                    description: "Never ask for full credit card numbers",
+                    action: "redirect_to_secure_payment"
+                }
+            ],
+            offensiveLanguagePolicy: "warn"
+        },
+
+        conversationFlow: {
+            greeting: "Hi! Thanks for contacting {{companyName}}. I'm {{agentName}}, and I'm here to help. May I have your order number or the email address you used for your purchase?",
+
+            verification: [
+                {
+                    field: "email_or_order",
+                    prompt: "Could you provide your order number or email address?",
+                    validation: "email_or_alphanumeric",
+                    maxAttempts: 3
+                }
+            ],
+
+            mainLoop: [
+                {
+                    intent: "order_status",
+                    response: "Let me check on that order for you... [FETCH_ORDER] Your order {{orderNumber}} was shipped on {{shipDate}} via {{carrier}}. The tracking number is {{trackingNumber}}. Would you like me to send this to your email?",
+                    actions: ["fetch_order", "send_tracking_email"]
+                },
+                {
+                    intent: "return_request",
+                    response: "I'd be happy to help with that return. Can you tell me the reason for the return? [OPTIONS: wrong_size, damaged, not_as_expected, changed_mind]",
+                    actions: ["initiate_return", "generate_label"]
+                },
+                {
+                    intent: "refund_status",
+                    response: "Let me look that up... [FETCH_REFUND] Your refund of ${{amount}} was processed on {{date}} and should appear in your account within {{refundDays}} business days.",
+                    actions: ["fetch_refund"]
+                }
+            ],
+
+            closingLines: [
+                "Is there anything else I can help you with today?",
+                "Great! Is there anything else you need assistance with?",
+                "Perfect! Feel free to reach out anytime. Have a wonderful day!"
+            ],
+
+            fallbackResponses: [
+                "I want to make sure I understand you correctly. Could you rephrase that?",
+                "Let me connect you with a team member who can better assist with that specific question.",
+                "That's a great question. Let me look into our policies and get back to you."
+            ]
+        }
+    },
+
+    channels: {
+        voice: {
+            enabled: true,
+            inbound: {
+                provider: "telnyx",
+                greeting: "Thank you for calling {{companyName}}. Please have your order number ready.",
+                holdMusic: "https://cdn.voiceorchestrator.com/music/upbeat-hold.mp3",
+                transferEnabled: true
+            },
+            outbound: {
+                enabled: false,
+                callScript: null,
+                consentRequired: true
+            }
+        },
+        chat: {
+            enabled: true,
+            webWidget: {
+                position: "bottom-right",
+                theme: "auto",
+                welcomeMessage: "Hi! Need help with an order? I'm here 24/7! 👋"
+            },
+            typing: {
+                showTypingIndicator: true,
+                responseDelayMs: 800
+            }
+        },
+        whatsapp: {
+            enabled: true,
+            businessProfile: {
+                greeting: "Hi! You've reached {{companyName}} support. How can I help you today?",
+                awayMessage: "Thanks for your message! I'm available 24/7, so go ahead and ask your question.",
+                businessHours: null
+            }
+        },
+        social: {
+            twitter: { enabled: true },
+            discord: { enabled: false },
+            telegram: { enabled: false }
+        }
+    },
+
+    voice: {
+        provider: "elevenlabs",
+        voiceId: "ErXwobaYiN019PkySvjV",
+        voicePreview: "https://cdn.voiceorchestrator.com/voices/rachel-preview.mp3",
+        alternativeVoices: [
+            "21m00Tcm4TlvDq8ikWAM",
+            "AZnzlk1XvdvUeBnXmlld"
+        ],
+        settings: {
+            stability: 0.75,
+            similarity: 0.8,
+            speed: 1.1,
+            pitch: 0
+        },
+        sttConfig: {
+            provider: "deepgram",
+            language: "en-US",
+            model: "nova-2",
+            punctuate: true,
+            profanityFilter: false
+        }
+    },
+
+    visual: {
+        avatar: {
+            type: "image",
+            url: "https://cdn.voiceorchestrator.com/avatars/support-female-01.png",
+            animation: "pulse"
+        },
+        branding: {
+            primaryColor: "#2463EB",
+            accentColor: "#10B981",
+            logo: null
+        }
+    },
+
+    knowledgeBase: {
+        preSeededFAQs: [
+            {
+                question: "What is your return policy?",
+                answer: "We offer a {{returnWindow}}-day return window for most items. Items must be unused and in original packaging. Refunds are processed within {{refundDays}} business days."
+            },
+            {
+                question: "How long does shipping take?",
+                answer: "Standard shipping takes 5-7 business days. Expedited shipping (2-3 days) is available for an additional fee. Free shipping on orders over ${{freeShippingThreshold}}."
+            }
+        ],
+
+        intents: [
+            { name: "order_status", examples: ["where is my order", "track package", "order status"] },
+            { name: "return_request", examples: ["return item", "send it back", "refund"] },
+            { name: "shipping_question", examples: ["how long shipping", "delivery time", "when arrive"] },
+            { name: "product_availability", examples: ["in stock", "available", "can I buy"] },
+            { name: "account_help", examples: ["reset password", "can't login", "account locked"] }
+        ],
+
+        entities: [
+            { name: "order_number", pattern: "[A-Z0-9]{8,12}" },
+            { name: "email", pattern: "email_regex" },
+            { name: "product_name", type: "dynamic" },
+            { name: "tracking_number", pattern: "[A-Z0-9]{10,20}" }
+        ],
+
+        documents: {
+            sampleDocs: [
+                "https://docs.voiceorchestrator.com/templates/ecommerce-policy-sample.pdf"
+            ],
+            requiredDocs: [
+                "Return policy document",
+                "Shipping policy document",
+                "Product catalog or FAQ"
+            ]
+        },
+
+        vectorStore: {
+            provider: "cloudflare-vectorize",
+            preIndexed: true
+        }
+    },
+
+    integrations: {
+        crm: {
+            type: "hubspot",
+            actions: [
+                {
+                    name: "create_ticket",
+                    trigger: "escalation_requested",
+                    mapping: {
+                        customer_email: "{{email}}",
+                        subject: "Support needed: {{issue_summary}}",
+                        priority: "{{urgency_level}}"
+                    }
+                },
+                {
+                    name: "log_interaction",
+                    trigger: "conversation_end",
+                    mapping: {
+                        contact_email: "{{email}}",
+                        activity_type: "Support Call",
+                        notes: "{{conversation_summary}}"
+                    }
+                }
+            ],
+            fields: [
+                { agentField: "customer_email", crmField: "email" },
+                { agentField: "order_number", crmField: "custom_order_id" }
+            ]
+        },
+
+        helpdesk: {
+            type: "zendesk",
+            actions: [
+                {
+                    name: "create_ticket",
+                    trigger: "human_handoff",
+                    mapping: {
+                        requester_email: "{{email}}",
+                        subject: "{{issue_type}}",
+                        description: "{{conversation_transcript}}",
+                        tags: "ai-agent,{{channel}}" // Fixed string vs array if mapping expects string
+                    }
+                }
+            ]
+        },
+
+        payment: {
+            type: "stripe",
+            actions: [
+                {
+                    name: "check_payment_status",
+                    endpoint: "/v1/charges/{{charge_id}}",
+                    auth: "bearer_token"
+                },
+                {
+                    name: "initiate_refund",
+                    endpoint: "/v1/refunds",
+                    requiresApproval: true,
+                    maxAmount: 500
+                }
+            ]
+        },
+
+        custom: {
+            webhookUrl: null,
+            apiEndpoints: [
+                {
+                    name: "check_inventory",
+                    method: "GET",
+                    url: "{{baseURL}}/api/inventory/{{sku}}",
+                    headers: { "Authorization": "Bearer {{apiKey}}" }
+                }
+            ]
+        }
+    },
+
+    analytics: {
+        preConfiguredDashboard: {
+            name: "E-Commerce Support Dashboard",
+            widgets: [
+                { type: "metric", label: "Total Conversations", query: "count(*)" },
+                { type: "metric", label: "Avg Resolution Time", query: "avg(duration)" },
+                { type: "metric", label: "Customer Satisfaction", query: "avg(csat_score)" },
+                { type: "chart", label: "Top Issues", query: "group_by(intent)" },
+                { type: "chart", label: "Hourly Volume", query: "group_by_hour(created_at)" }
+            ]
+        },
+        kpis: [
+            { name: "First Contact Resolution", target: 80, unit: "%" },
+            { name: "Avg Handle Time", target: 4, unit: "minutes" },
+            { name: "Escalation Rate", target: 15, unit: "%" },
+            { name: "CSAT Score", target: 4.5, unit: "/5" }
+        ],
+        alertThresholds: [
+            { metric: "escalation_rate", condition: "> 25%", action: "email_admin" },
+            { metric: "avg_wait_time", condition: "> 2 minutes", action: "slack_alert" }
+        ]
+    },
+
+    compliance: {
+        dataRetention: {
+            conversationLogs: 90,
+            audioRecordings: 30,
+            piiHandling: "mask"
+        },
+        certifications: ["GDPR", "PCI-DSS"],
+        consentFlow: {
+            type: "opt-in",
+            message: "This conversation may be recorded for quality assurance. Do you consent?",
+            required: true
+        }
+    },
+
+    customization: {
+        required: [
+            {
+                key: "companyName",
+                label: "Your Company Name",
+                type: "text",
+                placeholder: "Acme Store",
+                validation: { minLength: 2, maxLength: 50 }
+            },
+            {
+                key: "productCategory",
+                label: "What do you sell?",
+                type: "text",
+                placeholder: "apparel, electronics, home goods",
+                helpText: "This helps the agent understand your products"
+            },
+            {
+                key: "returnWindow",
+                label: "Return Window (days)",
+                type: "number",
+                default: 30,
+                min: 7,
+                max: 90
+            },
+            {
+                key: "freeShippingThreshold",
+                label: "Free Shipping Minimum ($)",
+                type: "number",
+                default: 50,
+                min: 0
+            },
+            {
+                key: "supportEmail",
+                label: "Support Team Email",
+                type: "email",
+                placeholder: "support@yourstore.com",
+                helpText: "Where escalations are sent"
+            }
+        ],
+
+        optional: [
+            {
+                key: "agentName",
+                label: "Agent Name",
+                type: "text",
+                default: "Alex",
+                helpText: "Give your AI agent a friendly name"
+            },
+            {
+                key: "maxRefundAmount",
+                label: "Max Auto-Refund Amount ($)",
+                type: "number",
+                default: 100,
+                helpText: "Refunds above this require manager approval"
+            },
+            {
+                key: "businessHours",
+                label: "Business Hours",
+                type: "schedule",
+                default: "24/7",
+                helpText: "When human agents are available for escalations"
+            },
+            {
+                key: "customGreeting",
+                label: "Custom Greeting (optional)",
+                type: "textarea",
+                placeholder: "Leave blank to use default",
+                validation: { maxLength: 200 }
+            }
+        ],
+
+        validation: [
+            {
+                field: "returnWindow",
+                rule: "must be between 7 and 90 days",
+                errorMessage: "Return window must be realistic (7-90 days)"
+            },
+            {
+                field: "supportEmail",
+                rule: "valid_email",
+                errorMessage: "Please provide a valid email address"
+            }
+        ]
+    },
+
+    testing: {
+        testScenarios: [
+            {
+                name: "Happy Path - Order Status",
+                steps: [
+                    { user: "Hi, where is my order?", expected: "greeting + request order number" },
+                    { user: "Order #12345", expected: "fetch order + provide status" },
+                    { user: "Thanks!", expected: "closing" }
+                ]
+            },
+            {
+                name: "Return Request",
+                steps: [
+                    { user: "I want to return something", expected: "request order number" },
+                    { user: "Order #12345", expected: "ask return reason" },
+                    { user: "Wrong size", expected: "initiate return + generate label" }
+                ]
+            },
+            {
+                name: "Escalation - Angry Customer",
+                steps: [
+                    { user: "This is ridiculous! I want a refund NOW!", expected: "empathy + gather info" },
+                    { user: "Order #12345, I want my money back!", expected: "check if within policy" },
+                    { user: "I'm calling my lawyer!", expected: "escalate to human immediately" }
+                ]
+            }
+        ],
+        demoPhoneNumber: "+1-555-DEMO-123",
+        demoWebWidget: "https://demo.voiceorchestrator.com/ecommerce-support"
+    },
+
+    deployment: {
+        estimatedSetupTime: 10,
+        prerequisites: [
+            "Telnyx account with phone number",
+            "Deepgram API key",
+            "ElevenLabs API key",
+            "Return/shipping policy documents"
+        ],
+        postDeploymentChecklist: [
+            "Test all 3 test scenarios",
+            "Verify email notifications work",
+            "Confirm escalation routing to your support team",
+            "Train your human agents on handoff protocol",
+            "Monitor first 50 conversations closely"
+        ]
+    },
+
+    version: "2.1.0",
+    changelog: [
+        { version: "2.1.0", date: "2026-01-09", changes: "Added WhatsApp support, improved escalation logic" },
+        { version: "2.0.0", date: "2025-12-01", changes: "Full rewrite with Inworld integration" }
+    ],
+    deprecated: false
+};

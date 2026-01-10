@@ -21,5 +21,11 @@ npx wrangler pages secret put GEMINI_API_KEY --project-name "$PROJECT_NAME"
 echo "5. Setting ELEVENLABS_API_KEY (Optional - Press Ctrl+C to skip if you don't have it, or Enter a dummy value)..."
 npx wrangler pages secret put ELEVENLABS_API_KEY --project-name "$PROJECT_NAME"
 
+echo "6. Setting PUBLIC_CLERK_PUBLISHABLE_KEY..."
+npx wrangler pages secret put PUBLIC_CLERK_PUBLISHABLE_KEY --project-name "$PROJECT_NAME"
+
+echo "7. Setting CLERK_SECRET_KEY..."
+npx wrangler pages secret put CLERK_SECRET_KEY --project-name "$PROJECT_NAME"
+
 echo "--------------------------------------------------------------------------------"
 echo "All secrets setup attempts finished."

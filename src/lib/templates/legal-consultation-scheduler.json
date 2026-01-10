@@ -1,0 +1,161 @@
+{
+    "id": "template_legal_intake_001",
+    "name": "Legal Intake Specialist",
+    "slug": "legal-consultation-scheduler",
+    "industry": "legal",
+    "useCase": "consultation",
+    "description": "Screen potential clients and schedule initial consultations.",
+    "tags": [
+        "legal",
+        "intake",
+        "scheduling"
+    ],
+    "featured": false,
+    "isPublic": true,
+    "createdBy": "system",
+    "usageCount": 0,
+    "exampleConversation": [
+        {
+            "role": "agent",
+            "content": "Thank you for calling Smith & Associates. Are you calling about a potential new case?"
+        },
+        {
+            "role": "user",
+            "content": "Yes, I was in a car accident."
+        }
+    ],
+    "channels": {
+        "voice": {
+            "enabled": true,
+            "inbound": {
+                "provider": "telnyx",
+                "greeting": "Hello, how can I help you?",
+                "holdMusic": "",
+                "transferEnabled": true
+            },
+            "outbound": {
+                "enabled": true,
+                "consentRequired": true
+            }
+        },
+        "chat": {
+            "enabled": true,
+            "webWidget": {
+                "position": "bottom-right",
+                "theme": "auto",
+                "welcomeMessage": "Hi! How can I help?"
+            },
+            "typing": {
+                "showTypingIndicator": true,
+                "responseDelayMs": 600
+            }
+        },
+        "whatsapp": {
+            "enabled": false,
+            "businessProfile": {
+                "greeting": "Hello!",
+                "businessHours": null
+            }
+        },
+        "social": {
+            "twitter": {
+                "enabled": false
+            },
+            "discord": {
+                "enabled": false
+            },
+            "telegram": {
+                "enabled": false
+            }
+        }
+    },
+    "behavior": {
+        "systemPrompt": "ROLE: Legal Intake Assistant for [Law Firm].\n\nOBJECTIVE: Gather basic case details to determine if the lead fits the firm's practice areas (e.g., Personal Injury, Family Law) and schedule a consultation.\n\nDISCLAIMER: 'I am an AI assistant, not an attorney. This conversation is for scheduling purposes and does not establish an attorney-client relationship.'\n\nQUESTIONS:\n1. Brief description of the incident/issue.\n2. Date of incident.\n3. Conflict check: Opposing party name.\n\nESCALATIONS:\n- Urgent court deadlines (hearings tomorrow).\n- Criminal defense cases (if firm handles civil only).",
+        "tone": [
+            "professional",
+            "discreet",
+            "formal"
+        ],
+        "fallbackRules": "Default to scheduling a callback.",
+        "escalationTriggers": [
+            "Urgent court deadline",
+            "Existing client",
+            "Mention of specific judge"
+        ],
+        "maxTurns": 12
+    },
+    "voice": {
+        "provider": "elevenlabs",
+        "voiceId": "voice_profile_formal_female_001",
+        "voicePreview": "",
+        "alternativeVoices": [],
+        "settings": {
+            "stability": 0.5,
+            "similarity": 0.75,
+            "speed": 1,
+            "pitch": 0
+        },
+        "sttConfig": {
+            "provider": "deepgram",
+            "language": "en-US",
+            "model": "nova-2",
+            "punctuate": true,
+            "profanityFilter": false
+        }
+    },
+    "knowledgeBase": {
+        "preSeededFAQs": [],
+        "intents": [],
+        "entities": [],
+        "documents": {
+            "sampleDocs": [],
+            "requiredDocs": [
+                "Practice Areas & Criteria"
+            ]
+        },
+        "vectorStore": {
+            "provider": "cloudflare-vectorize",
+            "preIndexed": false
+        }
+    },
+    "integrations": {
+        "custom": {
+            "apiEndpoints": []
+        }
+    },
+    "visual": {
+        "avatar": {
+            "type": "image",
+            "url": ""
+        },
+        "branding": {
+            "primaryColor": "#000000",
+            "accentColor": "#ffffff"
+        }
+    },
+    "testing": {
+        "testScenarios": [],
+        "demoWebWidget": ""
+    },
+    "analytics": {
+        "preConfiguredDashboard": {
+            "name": "Default",
+            "widgets": []
+        },
+        "kpis": [],
+        "alertThresholds": []
+    },
+    "compliance": {
+        "dataRetention": {
+            "conversationLogs": 30,
+            "audioRecordings": 30,
+            "piiHandling": "mask"
+        },
+        "certifications": []
+    },
+    "customization": {
+        "required": [],
+        "optional": [],
+        "validation": []
+    }
+}

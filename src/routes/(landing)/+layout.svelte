@@ -3,35 +3,18 @@
     import Button from "$lib/components/ui/Button.svelte";
     import { Sun, Moon, Github, Twitter, Linkedin } from "lucide-svelte";
     import { onMount } from "svelte";
+    import { SignedIn, SignedOut, UserButton } from "svelte-clerk";
+    import { theme } from "$lib/stores/theme";
 
     let { children } = $props();
-    let isDark = $state(false);
     let scrollY = $state(0);
 
     function toggleTheme() {
-        isDark = !isDark;
-        if (isDark) {
-            document.documentElement.classList.add("dark");
-            localStorage.setItem("theme", "dark");
-        } else {
-            document.documentElement.classList.remove("dark");
-            localStorage.setItem("theme", "light");
-        }
+        theme.toggle();
     }
 
     onMount(() => {
-        const stored = localStorage.getItem("theme");
-        if (
-            stored === "dark" ||
-            (!stored &&
-                window.matchMedia("(prefers-color-scheme: dark)").matches)
-        ) {
-            isDark = true;
-            document.documentElement.classList.add("dark");
-        } else {
-            isDark = false;
-            document.documentElement.classList.remove("dark");
-        }
+        theme.init();
     });
 
     const isScrolled = $derived(scrollY > 20);
@@ -76,19 +59,33 @@
                     class="p-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
                     aria-label="Toggle theme"
                 >
-                    {#if isDark}
-                        <Moon class="w-5 h-5" />
-                    {:else}
-                        <Sun class="w-5 h-5" />
+                    {#if theme}
+                        {#if $theme === "dark" || $theme === "high-contrast"}
+                            <Moon class="w-5 h-5" />
+                        {:else}
+                            <Sun class="w-5 h-5" />
+                        {/if}
                     {/if}
                 </button>
 
-                <div class="hidden md:block">
-                    <Button href="/app" variant="primary" size="sm"
-                        >Console</Button
-                    >
+                <div class="hidden md:flex items-center gap-4">
+                    <SignedOut>
+                        <Button href="/sign-in" variant="ghost" size="sm"
+                            >Sign In</Button
+                        >
+                        <Button href="/sign-up" variant="primary" size="sm"
+                            >Get Started</Button
+                        >
+                    </SignedOut>
+                    <SignedIn>
+                        <Button href="/app" variant="outline" size="sm"
+                            >Dashboard</Button
+                        >
+                        <div class="flex items-center">
+                            <UserButton afterSignOutUrl="/" />
+                        </div>
+                    </SignedIn>
                 </div>
-                <!-- Mobile Menu would go here -->
             </div>
         </div>
     </header>

@@ -1,0 +1,53 @@
+/* Semantic token definitions - these map to actual colors in theme files */
+:root {
+    /* Backgrounds */
+    --bg-default: var(--color-bg-default);
+    --bg-surface: var(--color-bg-surface);
+    --bg-surface-raised: var(--color-bg-surface-raised);
+    --bg-overlay: var(--color-bg-overlay);
+    --bg-accent-subtle: var(--color-bg-accent-subtle);
+
+    /* Text */
+    --text-primary: var(--color-text-primary);
+    --text-secondary: var(--color-text-secondary);
+    --text-muted: var(--color-text-muted);
+    --text-inverse: var(--color-text-inverse);
+    --text-accent: var(--color-text-accent);
+
+    /* Borders */
+    --border-default: var(--color-border-default);
+    --border-subtle: var(--color-border-subtle);
+    --border-strong: var(--color-border-strong);
+
+    /* Accents */
+    --accent-primary: var(--color-accent-primary);
+    --accent-primary-hover: var(--color-accent-primary-hover);
+    --accent-soft: var(--color-accent-soft);
+
+    /* Status colors */
+    --status-success: var(--color-status-success);
+    --status-success-bg: var(--color-status-success-bg);
+    --status-warning: var(--color-status-warning);
+    --status-warning-bg: var(--color-status-warning-bg);
+    --status-error: var(--color-status-error);
+    --status-error-bg: var(--color-status-error-bg);
+    --status-info: var(--color-status-info);
+    --status-info-bg: var(--color-status-info-bg);
+
+    /* Agent states */
+    --agent-active: var(--color-agent-active);
+    --agent-idle: var(--color-agent-idle);
+    --agent-error: var(--color-agent-error);
+    --agent-training: var(--color-agent-training);
+
+    /* Call states */
+    --call-incoming: var(--color-call-incoming);
+    --call-active: var(--color-call-active);
+    --call-ended: var(--color-call-ended);
+
+    /* Shadows */
+    --shadow-sm: var(--elevation-shadow-sm);
+    --shadow-md: var(--elevation-shadow-md);
+    --shadow-lg: var(--elevation-shadow-lg);
+    --shadow-xl: var(--elevation-shadow-xl);
+}

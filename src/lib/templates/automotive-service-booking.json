@@ -1,0 +1,161 @@
+{
+    "id": "template_automotive_service_001",
+    "name": "Service Appointment Scheduler",
+    "slug": "automotive-service-booking",
+    "industry": "automotive",
+    "useCase": "appointment-scheduling",
+    "description": "Book car maintenance and repair appointments for dealerships.",
+    "tags": [
+        "automotive",
+        "service",
+        "scheduling"
+    ],
+    "featured": false,
+    "isPublic": true,
+    "createdBy": "system",
+    "usageCount": 0,
+    "exampleConversation": [
+        {
+            "role": "user",
+            "content": "My check engine light came on."
+        },
+        {
+            "role": "agent",
+            "content": "I can help get that checked out. What is the year, make, and model of your vehicle?"
+        }
+    ],
+    "channels": {
+        "voice": {
+            "enabled": true,
+            "inbound": {
+                "provider": "telnyx",
+                "greeting": "Hello, how can I help you?",
+                "holdMusic": "",
+                "transferEnabled": true
+            },
+            "outbound": {
+                "enabled": true,
+                "consentRequired": true
+            }
+        },
+        "chat": {
+            "enabled": false,
+            "webWidget": {
+                "position": "bottom-right",
+                "theme": "auto",
+                "welcomeMessage": "Hi! How can I help?"
+            },
+            "typing": {
+                "showTypingIndicator": true,
+                "responseDelayMs": 600
+            }
+        },
+        "whatsapp": {
+            "enabled": true,
+            "businessProfile": {
+                "greeting": "Hello!",
+                "businessHours": null
+            }
+        },
+        "social": {
+            "twitter": {
+                "enabled": false
+            },
+            "discord": {
+                "enabled": false
+            },
+            "telegram": {
+                "enabled": false
+            }
+        }
+    },
+    "behavior": {
+        "systemPrompt": "ROLE: Service Scheduler for [Dealership].\n\nTASKS:\n- Book oil changes, tire rotations, inspections, and repairs.\n- VIN retrieval: Ask for VIN or License Plate if not in system.\n- Upsell: Briefly mention current specials (e.g., 'Discount on alignment with new tires') if relevant.\n\nLOGISTICS:\n- Ask if they will drop off or wait.\n- Offer shuttle service radius check.",
+        "tone": [
+            "helpful",
+            "knowledgeable",
+            "efficient"
+        ],
+        "fallbackRules": "Transfer to Service Advisor.",
+        "escalationTriggers": [
+            "Warranty dispute",
+            "Recall inquiry",
+            "Collision center request"
+        ],
+        "maxTurns": 8
+    },
+    "voice": {
+        "provider": "elevenlabs",
+        "voiceId": "voice_profile_mechanic_male_001",
+        "voicePreview": "",
+        "alternativeVoices": [],
+        "settings": {
+            "stability": 0.5,
+            "similarity": 0.75,
+            "speed": 1,
+            "pitch": 0
+        },
+        "sttConfig": {
+            "provider": "deepgram",
+            "language": "en-US",
+            "model": "nova-2",
+            "punctuate": true,
+            "profanityFilter": false
+        }
+    },
+    "knowledgeBase": {
+        "preSeededFAQs": [],
+        "intents": [],
+        "entities": [],
+        "documents": {
+            "sampleDocs": [],
+            "requiredDocs": [
+                "Service Pricing Guide"
+            ]
+        },
+        "vectorStore": {
+            "provider": "cloudflare-vectorize",
+            "preIndexed": false
+        }
+    },
+    "integrations": {
+        "custom": {
+            "apiEndpoints": []
+        }
+    },
+    "visual": {
+        "avatar": {
+            "type": "image",
+            "url": ""
+        },
+        "branding": {
+            "primaryColor": "#000000",
+            "accentColor": "#ffffff"
+        }
+    },
+    "testing": {
+        "testScenarios": [],
+        "demoWebWidget": ""
+    },
+    "analytics": {
+        "preConfiguredDashboard": {
+            "name": "Default",
+            "widgets": []
+        },
+        "kpis": [],
+        "alertThresholds": []
+    },
+    "compliance": {
+        "dataRetention": {
+            "conversationLogs": 30,
+            "audioRecordings": 30,
+            "piiHandling": "mask"
+        },
+        "certifications": []
+    },
+    "customization": {
+        "required": [],
+        "optional": [],
+        "validation": []
+    }
+}

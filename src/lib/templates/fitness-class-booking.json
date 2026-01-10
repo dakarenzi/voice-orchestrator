@@ -1,0 +1,161 @@
+{
+    "id": "template_fitness_booking_001",
+    "name": "Gym & Class Scheduler",
+    "slug": "fitness-class-booking",
+    "industry": "fitness",
+    "useCase": "appointment-scheduling",
+    "description": "Book classes, personal training sessions, and answer membership questions.",
+    "tags": [
+        "fitness",
+        "gym",
+        "scheduling"
+    ],
+    "featured": false,
+    "isPublic": true,
+    "createdBy": "system",
+    "usageCount": 0,
+    "exampleConversation": [
+        {
+            "role": "user",
+            "content": "Is the 6 PM spin class full?"
+        },
+        {
+            "role": "agent",
+            "content": "Let me check the roster... Good news! There are still 3 bikes open. Want me to book one for you?"
+        }
+    ],
+    "channels": {
+        "voice": {
+            "enabled": true,
+            "inbound": {
+                "provider": "telnyx",
+                "greeting": "Hello, how can I help you?",
+                "holdMusic": "",
+                "transferEnabled": true
+            },
+            "outbound": {
+                "enabled": false,
+                "consentRequired": true
+            }
+        },
+        "chat": {
+            "enabled": true,
+            "webWidget": {
+                "position": "bottom-right",
+                "theme": "auto",
+                "welcomeMessage": "Hi! How can I help?"
+            },
+            "typing": {
+                "showTypingIndicator": true,
+                "responseDelayMs": 600
+            }
+        },
+        "whatsapp": {
+            "enabled": true,
+            "businessProfile": {
+                "greeting": "Hello!",
+                "businessHours": null
+            }
+        },
+        "social": {
+            "twitter": {
+                "enabled": false
+            },
+            "discord": {
+                "enabled": false
+            },
+            "telegram": {
+                "enabled": false
+            }
+        }
+    },
+    "behavior": {
+        "systemPrompt": "ROLE: Front Desk for [Gym/Studio].\n\nTASKS:\n- Class Sign-ups: Yoga, HIIT, Pilates. Check capacity.\n- Membership: Explain tiers (Basic vs. Premium).\n- Hours & Location info.\n\nVIBE:\n- High energy, motivating, welcoming.\n\nRULES:\n- Waiver must be signed for new guests (send link).\n- Cancellation policy: 12-hour notice required.",
+        "tone": [
+            "energetic",
+            "motivating",
+            "friendly"
+        ],
+        "fallbackRules": "Direct to app for booking.",
+        "escalationTriggers": [
+            "Membership cancellation",
+            "Billing freeze",
+            "Injury report"
+        ],
+        "maxTurns": 8
+    },
+    "voice": {
+        "provider": "elevenlabs",
+        "voiceId": "voice_profile_energetic_female_001",
+        "voicePreview": "",
+        "alternativeVoices": [],
+        "settings": {
+            "stability": 0.5,
+            "similarity": 0.75,
+            "speed": 1,
+            "pitch": 0
+        },
+        "sttConfig": {
+            "provider": "deepgram",
+            "language": "en-US",
+            "model": "nova-2",
+            "punctuate": true,
+            "profanityFilter": false
+        }
+    },
+    "knowledgeBase": {
+        "preSeededFAQs": [],
+        "intents": [],
+        "entities": [],
+        "documents": {
+            "sampleDocs": [],
+            "requiredDocs": [
+                "Class Schedule"
+            ]
+        },
+        "vectorStore": {
+            "provider": "cloudflare-vectorize",
+            "preIndexed": false
+        }
+    },
+    "integrations": {
+        "custom": {
+            "apiEndpoints": []
+        }
+    },
+    "visual": {
+        "avatar": {
+            "type": "image",
+            "url": ""
+        },
+        "branding": {
+            "primaryColor": "#000000",
+            "accentColor": "#ffffff"
+        }
+    },
+    "testing": {
+        "testScenarios": [],
+        "demoWebWidget": ""
+    },
+    "analytics": {
+        "preConfiguredDashboard": {
+            "name": "Default",
+            "widgets": []
+        },
+        "kpis": [],
+        "alertThresholds": []
+    },
+    "compliance": {
+        "dataRetention": {
+            "conversationLogs": 30,
+            "audioRecordings": 30,
+            "piiHandling": "mask"
+        },
+        "certifications": []
+    },
+    "customization": {
+        "required": [],
+        "optional": [],
+        "validation": []
+    }
+}

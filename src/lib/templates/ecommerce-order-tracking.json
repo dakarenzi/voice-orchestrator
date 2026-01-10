@@ -1,0 +1,159 @@
+{
+    "id": "template_ecommerce_tracking_001",
+    "name": "E-commerce Order Tracker",
+    "slug": "ecommerce-order-tracking",
+    "industry": "ecommerce",
+    "useCase": "order-management",
+    "description": "Automated order status updates and tracking info lookup.",
+    "tags": [
+        "ecommerce",
+        "retail",
+        "automation"
+    ],
+    "featured": false,
+    "isPublic": true,
+    "createdBy": "system",
+    "usageCount": 0,
+    "exampleConversation": [
+        {
+            "role": "user",
+            "content": "Where is my stuff?"
+        },
+        {
+            "role": "agent",
+            "content": "I can check that for you. What is your order number?"
+        }
+    ],
+    "channels": {
+        "voice": {
+            "enabled": false,
+            "inbound": {
+                "provider": "telnyx",
+                "greeting": "Hello, how can I help you?",
+                "holdMusic": "",
+                "transferEnabled": true
+            },
+            "outbound": {
+                "enabled": false,
+                "consentRequired": true
+            }
+        },
+        "chat": {
+            "enabled": true,
+            "webWidget": {
+                "position": "bottom-right",
+                "theme": "auto",
+                "welcomeMessage": "Hi! How can I help?"
+            },
+            "typing": {
+                "showTypingIndicator": true,
+                "responseDelayMs": 600
+            }
+        },
+        "whatsapp": {
+            "enabled": true,
+            "businessProfile": {
+                "greeting": "Hello!",
+                "businessHours": null
+            }
+        },
+        "social": {
+            "twitter": {
+                "enabled": false
+            },
+            "discord": {
+                "enabled": false
+            },
+            "telegram": {
+                "enabled": false
+            }
+        }
+    },
+    "behavior": {
+        "systemPrompt": "ROLE: Order Tracking Bot for [Store].\n\nTASK: Provide shipping updates instantly.\n\nFLOW:\n1. Ask for Order ID and Email.\n2. Query System.\n3. Result: 'Order #123 is in transit. ETA: Friday.'\n4. Handle 'Where is it?' and 'Change address' queries.\n\nRULES:\n- Address changes only allowed if status is NOT 'Shipped'.\n- If lost (no movement > 7 days), escalate to CS agent.",
+        "tone": [
+            "efficient",
+            "robotic-friendly",
+            "precise"
+        ],
+        "fallbackRules": "Provide link to carrier tracking page.",
+        "escalationTriggers": [
+            "Lost package",
+            "Damaged item",
+            "Wrong item received"
+        ],
+        "maxTurns": 5
+    },
+    "voice": {
+        "provider": "elevenlabs",
+        "voiceId": "voice_profile_neutral_001",
+        "voicePreview": "",
+        "alternativeVoices": [],
+        "settings": {
+            "stability": 0.5,
+            "similarity": 0.75,
+            "speed": 1,
+            "pitch": 0
+        },
+        "sttConfig": {
+            "provider": "deepgram",
+            "language": "en-US",
+            "model": "nova-2",
+            "punctuate": true,
+            "profanityFilter": false
+        }
+    },
+    "knowledgeBase": {
+        "preSeededFAQs": [],
+        "intents": [],
+        "entities": [],
+        "documents": {
+            "sampleDocs": [],
+            "requiredDocs": []
+        },
+        "vectorStore": {
+            "provider": "cloudflare-vectorize",
+            "preIndexed": false
+        }
+    },
+    "integrations": {
+        "custom": {
+            "apiEndpoints": []
+        }
+    },
+    "visual": {
+        "avatar": {
+            "type": "image",
+            "url": ""
+        },
+        "branding": {
+            "primaryColor": "#000000",
+            "accentColor": "#ffffff"
+        }
+    },
+    "testing": {
+        "testScenarios": [],
+        "demoWebWidget": ""
+    },
+    "analytics": {
+        "preConfiguredDashboard": {
+            "name": "Default",
+            "widgets": []
+        },
+        "kpis": [],
+        "alertThresholds": []
+    },
+    "compliance": {
+        "dataRetention": {
+            "conversationLogs": 30,
+            "audioRecordings": 30,
+            "piiHandling": "mask"
+        },
+        "certifications": []
+    },
+    "customization": {
+        "required": [],
+        "optional": [],
+        "validation": []
+    }
+}

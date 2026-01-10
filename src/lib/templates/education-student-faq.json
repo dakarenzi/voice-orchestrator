@@ -1,0 +1,163 @@
+{
+    "id": "template_education_faq_001",
+    "name": "Student Services Assistant",
+    "slug": "education-student-faq",
+    "industry": "education",
+    "useCase": "faq-assistant",
+    "description": "Answer student questions about enrollment, campus resources, and academic calendars.",
+    "longDescription": "This agent serves as a first point of contact for university or college websites. It helps students find information about enrollment deadlines, financial aid office hours, library services, and campus events, reducing the load on administrative staff.",
+    "tags": [
+        "education",
+        "faq",
+        "student-services",
+        "chat"
+    ],
+    "featured": false,
+    "isPublic": true,
+    "createdBy": "system",
+    "usageCount": 0,
+    "exampleConversation": [
+        {
+            "role": "user",
+            "content": "When is the last day to drop a class?"
+        },
+        {
+            "role": "agent",
+            "content": "For the Fall 2024 semester, the last day to drop a class without a 'W' grade is September 15th. Would you like the link to the registrar's portal?"
+        }
+    ],
+    "channels": {
+        "voice": {
+            "enabled": false,
+            "inbound": {
+                "provider": "telnyx",
+                "greeting": "Hello, how can I help you?",
+                "holdMusic": "",
+                "transferEnabled": true
+            },
+            "outbound": {
+                "enabled": false,
+                "consentRequired": true
+            }
+        },
+        "chat": {
+            "enabled": true,
+            "webWidget": {
+                "position": "bottom-right",
+                "theme": "auto",
+                "welcomeMessage": "Hi! How can I help?"
+            },
+            "typing": {
+                "showTypingIndicator": true,
+                "responseDelayMs": 600
+            }
+        },
+        "whatsapp": {
+            "enabled": true,
+            "businessProfile": {
+                "greeting": "Hello!",
+                "businessHours": null
+            }
+        },
+        "social": {
+            "twitter": {
+                "enabled": false
+            },
+            "discord": {
+                "enabled": false
+            },
+            "telegram": {
+                "enabled": false
+            }
+        }
+    },
+    "behavior": {
+        "systemPrompt": "ROLE: You are the Student Services Assistant for [Institution Name]. Your mission is to help students navigate campus life and administrative processes.\n\nTOPICS:\n- Enrollment & Registration\n- Financial Aid deadlines\n- Campus Housing\n- Library & IT Services\n\nGUIDELINES:\n- Be encouraging and supportive. College can be stressful!\n- Provide direct links to forms or portals whenever possible.\n- If a deadline has passed, explain the appeal process or next steps clearly.\n- For mental health inquiries, immediately provide the campus counseling hotline and emergency resources.",
+        "tone": [
+            "supportive",
+            "informative",
+            "encouraging"
+        ],
+        "fallbackRules": "Refer to the specific department web page.",
+        "escalationTriggers": [
+            "Mental health crisis",
+            "Financial aid appeal",
+            "Grade dispute"
+        ],
+        "maxTurns": 20
+    },
+    "voice": {
+        "provider": "elevenlabs",
+        "voiceId": "voice_profile_friendly_female_001",
+        "voicePreview": "",
+        "alternativeVoices": [],
+        "settings": {
+            "stability": 0.5,
+            "similarity": 0.75,
+            "speed": 1,
+            "pitch": 0
+        },
+        "sttConfig": {
+            "provider": "deepgram",
+            "language": "en-US",
+            "model": "nova-2",
+            "punctuate": true,
+            "profanityFilter": false
+        }
+    },
+    "knowledgeBase": {
+        "preSeededFAQs": [],
+        "intents": [],
+        "entities": [],
+        "documents": {
+            "sampleDocs": [],
+            "requiredDocs": [
+                "Academic Calendar URL"
+            ]
+        },
+        "vectorStore": {
+            "provider": "cloudflare-vectorize",
+            "preIndexed": false
+        }
+    },
+    "integrations": {
+        "custom": {
+            "apiEndpoints": []
+        }
+    },
+    "visual": {
+        "avatar": {
+            "type": "image",
+            "url": ""
+        },
+        "branding": {
+            "primaryColor": "#000000",
+            "accentColor": "#ffffff"
+        }
+    },
+    "testing": {
+        "testScenarios": [],
+        "demoWebWidget": ""
+    },
+    "analytics": {
+        "preConfiguredDashboard": {
+            "name": "Default",
+            "widgets": []
+        },
+        "kpis": [],
+        "alertThresholds": []
+    },
+    "compliance": {
+        "dataRetention": {
+            "conversationLogs": 30,
+            "audioRecordings": 30,
+            "piiHandling": "mask"
+        },
+        "certifications": []
+    },
+    "customization": {
+        "required": [],
+        "optional": [],
+        "validation": []
+    }
+}

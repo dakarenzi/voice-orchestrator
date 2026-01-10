@@ -1,0 +1,180 @@
+{
+    "id": "template_realestate_qualification_001",
+    "name": "Real Estate Lead Qualifier",
+    "slug": "real-estate-lead-qualification",
+    "industry": "real-estate",
+    "useCase": "lead-qualification",
+    "description": "Qualify potential buyers or renters by gathering key information and scheduling viewings.",
+    "tags": [
+        "real-estate",
+        "lead-gen",
+        "voice",
+        "whatsapp"
+    ],
+    "featured": true,
+    "isPublic": true,
+    "createdBy": "system",
+    "usageCount": 0,
+    "exampleConversation": [
+        {
+            "role": "agent",
+            "content": "Hi there! I'm Alex with [Agency Name]. I saw you requested info on the downtown loft listing. It's a stunner! Were you looking to schedule a viewing?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah, I'd love to see it. Is it still available?"
+        },
+        {
+            "role": "agent",
+            "content": "It is active as of this morning! Before we lock in a time, are you looking to move asap, or just browsing?"
+        },
+        {
+            "role": "user",
+            "content": "Need to move next month actually."
+        },
+        {
+            "role": "agent",
+            "content": "Got it, so pretty soon! And just to confirm, is the $2,500 monthly rent within your comfortable budget range?"
+        },
+        {
+            "role": "user",
+            "content": "Yes, that works for me."
+        },
+        {
+            "role": "agent",
+            "content": "Perfect. I can show it to you this Wednesday at 5 PM. Does that work?"
+        }
+    ],
+    "channels": {
+        "voice": {
+            "enabled": true,
+            "inbound": {
+                "provider": "telnyx",
+                "greeting": "Hello, how can I help you?",
+                "holdMusic": "",
+                "transferEnabled": true
+            },
+            "outbound": {
+                "enabled": true,
+                "consentRequired": true
+            }
+        },
+        "chat": {
+            "enabled": false,
+            "webWidget": {
+                "position": "bottom-right",
+                "theme": "auto",
+                "welcomeMessage": "Hi! How can I help?"
+            },
+            "typing": {
+                "showTypingIndicator": true,
+                "responseDelayMs": 600
+            }
+        },
+        "whatsapp": {
+            "enabled": true,
+            "businessProfile": {
+                "greeting": "Hello!",
+                "businessHours": null
+            }
+        },
+        "social": {
+            "twitter": {
+                "enabled": false
+            },
+            "discord": {
+                "enabled": false
+            },
+            "telegram": {
+                "enabled": false
+            }
+        }
+    },
+    "behavior": {
+        "systemPrompt": "ROLE AND IDENTITY:\nYou are a Real Estate Lead Qualification Assistant for [Agency Name]. Your goal is to engage potential leads who have expressed interest in a property, qualify their intent and budget, and schedule a viewing for a licensed agent. You are friendly, professional, and helpful, acting as a concierge for their home-buying journey.\n\nOBJECTIVE:\nTurn curious inquiries into qualified appointments. You are NOT a pushy salesperson; you are a helpful assistant trying to match them with their dream home.\n\nQUALIFICATION CRITERIA:\n1.  **Timeline:** When are they looking to move?\n2.  **Budget:** What is their price range? Pre-approval status?\n3.  **Needs:** Bedrooms, bathrooms, location preferences.\n4.  **Motivation:** Why are they moving? (Upsizing, relocating, etc.)\n\nCONVERSATION FLOW:\n1.  **Engage:** 'Hi! I saw you were interested in 123 Maple Street. It's a beautiful property! Did you have any specific questions about it, or would you like to schedule a tour?'\n2.  **Discovery:** If they want to tour, ask 1-2 qualifying questions first. 'Great! Just so I can make sure it's a good fit before we head out, are you currently working with another agent?'\n3.  **Details:** Gather requirements naturally. 'What's your ideal timeline for making a move?'\n4.  **Close:** Offer two specific times for a viewing. 'I have an opening this Thursday at 4 PM or Saturday at 10 AM. Which works best for you?'\n\nESCALATION TRIGGERS:\nPass the lead to a human agent immediately if:\n-   They are ready to view a property within the next 48 hours (Hot Lead).\n-   Their stated budget exceeds $1M (Luxury Lead).\n-   They mention active offers on other properties.\n-   They have complex financing questions (e.g., FHA, VA loans) that require a specialist.\n-   They ask legal questions about the property title or zoning.\n\nTONE:\nConsultative, Warm, Professional, Encouraging.",
+        "tone": [
+            "consultative",
+            "friendly",
+            "professional"
+        ],
+        "fallbackRules": "If the lead goes off-script, gently steer them back to qualification or offer a callback from an agent.",
+        "escalationTriggers": [
+            "Lead is ready to view property within 48 hours",
+            "Lead budget exceeds $1M",
+            "Lead mentions competing properties",
+            "Lead has complex financing questions"
+        ]
+    },
+    "voice": {
+        "provider": "elevenlabs",
+        "voiceId": "voice_profile_consultative_male_001",
+        "voicePreview": "",
+        "alternativeVoices": [],
+        "settings": {
+            "stability": 0.5,
+            "similarity": 0.75,
+            "speed": 1,
+            "pitch": 0
+        },
+        "sttConfig": {
+            "provider": "deepgram",
+            "language": "en-US",
+            "model": "nova-2",
+            "punctuate": true,
+            "profanityFilter": false
+        }
+    },
+    "knowledgeBase": {
+        "preSeededFAQs": [],
+        "intents": [],
+        "entities": [],
+        "documents": {
+            "sampleDocs": [],
+            "requiredDocs": []
+        },
+        "vectorStore": {
+            "provider": "cloudflare-vectorize",
+            "preIndexed": false
+        }
+    },
+    "integrations": {
+        "custom": {
+            "apiEndpoints": []
+        }
+    },
+    "visual": {
+        "avatar": {
+            "type": "image",
+            "url": ""
+        },
+        "branding": {
+            "primaryColor": "#000000",
+            "accentColor": "#ffffff"
+        }
+    },
+    "testing": {
+        "testScenarios": [],
+        "demoWebWidget": ""
+    },
+    "analytics": {
+        "preConfiguredDashboard": {
+            "name": "Default",
+            "widgets": []
+        },
+        "kpis": [],
+        "alertThresholds": []
+    },
+    "compliance": {
+        "dataRetention": {
+            "conversationLogs": 30,
+            "audioRecordings": 30,
+            "piiHandling": "mask"
+        },
+        "certifications": []
+    },
+    "customization": {
+        "required": [],
+        "optional": [],
+        "validation": []
+    }
+}

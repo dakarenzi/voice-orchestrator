@@ -17,8 +17,8 @@
                     label: "Total Calls",
                     data: [12, 19, 3, 5, 2, 3, 20],
                     fill: true,
-                    backgroundColor: "rgba(59, 130, 246, 0.1)",
-                    borderColor: "rgb(59, 130, 246)",
+                    backgroundColor: "hsl(var(--accent-primary) / 0.1)",
+                    borderColor: "hsl(var(--accent-primary))",
                     tension: 0.4,
                 },
             ],
@@ -29,11 +29,12 @@
                 {
                     data: [120, 80, 45],
                     backgroundColor: [
-                        "rgba(59, 130, 246, 0.8)",
-                        "rgba(16, 185, 129, 0.8)",
-                        "rgba(245, 158, 11, 0.8)",
+                        "hsl(var(--accent-primary) / 0.8)",
+                        "hsl(var(--status-success) / 0.8)",
+                        "hsl(var(--status-warning) / 0.8)",
                     ],
                     borderWidth: 1,
+                    borderColor: "hsl(var(--bg-surface))",
                 },
             ],
         },
@@ -43,8 +44,10 @@
 <div class="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-500">
     <div class="flex justify-between items-center">
         <div>
-            <h2 class="text-3xl font-bold tracking-tight">Analytics</h2>
-            <p class="text-muted-foreground mt-2">
+            <h2 class="text-3xl font-bold tracking-tight text-txt-primary">
+                Analytics
+            </h2>
+            <p class="text-txt-muted mt-2">
                 Deep dive into conversation metrics.
             </p>
         </div>
@@ -108,26 +111,26 @@
                         >
                     </tr>
                 </thead>
-                <tbody class="divide-y">
+                <tbody class="divide-y divide-brd-subtle">
                     <tr
                         ><td class="py-3">Avg. Duration</td><td class="py-3"
                             >4m 12s</td
-                        ><td class="py-3 text-green-500">+12%</td></tr
+                        ><td class="py-3 text-status-success">+12%</td></tr
                     >
                     <tr
                         ><td class="py-3">Sentiment Score</td><td class="py-3"
                             >8.4/10</td
-                        ><td class="py-3 text-green-500">+5%</td></tr
+                        ><td class="py-3 text-status-success">+5%</td></tr
                     >
                     <tr
                         ><td class="py-3">User Interruptions</td><td
                             class="py-3">2.1 avg</td
-                        ><td class="py-3 text-red-500">+0.5</td></tr
+                        ><td class="py-3 text-status-error">+0.5</td></tr
                     >
                     <tr
                         ><td class="py-3">First Response Time</td><td
                             class="py-3">1.2s</td
-                        ><td class="py-3 text-green-500">-0.3s</td></tr
+                        ><td class="py-3 text-status-success">-0.3s</td></tr
                     >
                 </tbody>
             </table>

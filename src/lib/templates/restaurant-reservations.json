@@ -1,0 +1,164 @@
+{
+    "id": "template_restaurant_reservations_001",
+    "name": "Restaurant Reservation Host",
+    "slug": "restaurant-reservations",
+    "industry": "restaurant",
+    "useCase": "reservation",
+    "description": "Take table bookings, modify reservations, and answer menu questions.",
+    "tools": [
+        "booking_integration"
+    ],
+    "tags": [
+        "restaurant",
+        "hospitality",
+        "voice"
+    ],
+    "featured": false,
+    "isPublic": true,
+    "createdBy": "system",
+    "usageCount": 0,
+    "exampleConversation": [
+        {
+            "role": "user",
+            "content": "I need a table for two tonight."
+        },
+        {
+            "role": "agent",
+            "content": "I'd love to host you! What time were you hoping to come in?"
+        }
+    ],
+    "channels": {
+        "voice": {
+            "enabled": true,
+            "inbound": {
+                "provider": "telnyx",
+                "greeting": "Hello, how can I help you?",
+                "holdMusic": "",
+                "transferEnabled": true
+            },
+            "outbound": {
+                "enabled": false,
+                "consentRequired": true
+            }
+        },
+        "chat": {
+            "enabled": false,
+            "webWidget": {
+                "position": "bottom-right",
+                "theme": "auto",
+                "welcomeMessage": "Hi! How can I help?"
+            },
+            "typing": {
+                "showTypingIndicator": true,
+                "responseDelayMs": 600
+            }
+        },
+        "whatsapp": {
+            "enabled": true,
+            "businessProfile": {
+                "greeting": "Hello!",
+                "businessHours": null
+            }
+        },
+        "social": {
+            "twitter": {
+                "enabled": false
+            },
+            "discord": {
+                "enabled": false
+            },
+            "telegram": {
+                "enabled": false
+            }
+        }
+    },
+    "behavior": {
+        "systemPrompt": "ROLE: You are the Host(ess) for [Restaurant Name].\n\nDUTIES:\n1. Book tables: Ask for party size, date, and time.\n2. Menu: Answer questions about allergens (Gluten, Nuts) and house specialties.\n3. Modification: Change existing bookings if space allows.\n\nRULES:\n- Always confirm the booking details back to the guest: 'That's a table for 4 on Friday at 7 PM?'\n- If fully booked, offer the nearest available slots: 'I'm full at 7, but I can do 5:45 or 8:30?'\n- Mention the cancellation policy when finalizing.",
+        "tone": [
+            "welcoming",
+            "hospitable",
+            "upbeat"
+        ],
+        "fallbackRules": "Offer to take a message for a manager callback.",
+        "escalationTriggers": [
+            "Large party (>8 pax)",
+            "Private event inquiry",
+            "Complaint about food/service"
+        ],
+        "maxTurns": 10
+    },
+    "voice": {
+        "provider": "elevenlabs",
+        "voiceId": "voice_profile_warm_male_001",
+        "voicePreview": "",
+        "alternativeVoices": [],
+        "settings": {
+            "stability": 0.5,
+            "similarity": 0.75,
+            "speed": 1,
+            "pitch": 0
+        },
+        "sttConfig": {
+            "provider": "deepgram",
+            "language": "en-US",
+            "model": "nova-2",
+            "punctuate": true,
+            "profanityFilter": false
+        }
+    },
+    "knowledgeBase": {
+        "preSeededFAQs": [],
+        "intents": [],
+        "entities": [],
+        "documents": {
+            "sampleDocs": [],
+            "requiredDocs": [
+                "Menu & Allergens List"
+            ]
+        },
+        "vectorStore": {
+            "provider": "cloudflare-vectorize",
+            "preIndexed": false
+        }
+    },
+    "integrations": {
+        "custom": {
+            "apiEndpoints": []
+        }
+    },
+    "visual": {
+        "avatar": {
+            "type": "image",
+            "url": ""
+        },
+        "branding": {
+            "primaryColor": "#000000",
+            "accentColor": "#ffffff"
+        }
+    },
+    "testing": {
+        "testScenarios": [],
+        "demoWebWidget": ""
+    },
+    "analytics": {
+        "preConfiguredDashboard": {
+            "name": "Default",
+            "widgets": []
+        },
+        "kpis": [],
+        "alertThresholds": []
+    },
+    "compliance": {
+        "dataRetention": {
+            "conversationLogs": 30,
+            "audioRecordings": 30,
+            "piiHandling": "mask"
+        },
+        "certifications": []
+    },
+    "customization": {
+        "required": [],
+        "optional": [],
+        "validation": []
+    }
+}
