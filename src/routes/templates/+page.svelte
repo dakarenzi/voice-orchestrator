@@ -1,14 +1,18 @@
 <script lang="ts">
-    import { templates, listTemplates } from "$lib/templates/registry";
+    import Badge from "$lib/components/ui/Badge.svelte";
+    import Input from "$lib/components/ui/Input.svelte";
+    import Button from "$lib/components/ui/Button.svelte";
+    import Card from "$lib/components/ui/Card.svelte";
+    import CardHeader from "$lib/components/ui/CardHeader.svelte";
+    import CardContent from "$lib/components/ui/CardContent.svelte";
     import TemplateCard from "$lib/components/templates/TemplateCard.svelte";
-    import { Input } from "$lib/components/ui/input";
-    import { Button } from "$lib/components/ui/button";
-    import { Search, Filter, Sparkles } from "lucide-svelte";
-    import { Badge } from "$lib/components/ui/badge";
+    import { Search, Filter, Sparkles, SlidersHorizontal } from "lucide-svelte";
+    import { templates } from "$lib/templates/registry";
+    import type { AgentTemplate } from "$lib/types/template";
     import { fade } from "svelte/transition";
 
     let searchQuery = "";
-    let selectedCategory: string | null = null;
+    let activeCategory: string | null = null;
     let selectedIndustry: string | null = null;
 
     // Derive filtered templates
@@ -16,9 +20,8 @@
         const matchesSearch =
             t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             t.description.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesCategory = selectedCategory
-            ? t.category === selectedCategory
-            : true;
+        const matchesCategory =
+            !activeCategory || t.category === activeCategory;
         const matchesIndustry = selectedIndustry
             ? t.industry.includes(selectedIndustry as any)
             : true;
@@ -74,22 +77,23 @@
             class="flex gap-2 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto no-scrollbar"
         >
             <Button
-                variant={selectedCategory === null ? "default" : "outline"}
+                variant={activeCategory === null ? "primary" : "outline"}
                 size="sm"
-                onclick={() => (selectedCategory = null)}
+                class="rounded-full shadow-sm"
+                onclick={() => (activeCategory = null)}
             >
-                All
+                All Templates
             </Button>
-            {#each categories as cat}
+            {#each categories as category}
                 <Button
-                    variant={selectedCategory === cat ? "default" : "outline"}
+                    variant={activeCategory === category
+                        ? "primary"
+                        : "outline"}
                     size="sm"
-                    class="capitalize whitespace-nowrap"
-                    onclick={() =>
-                        (selectedCategory =
-                            selectedCategory === cat ? null : cat)}
+                    class="rounded-full capitalize shadow-sm whitespace-nowrap"
+                    onclick={() => (activeCategory = category)}
                 >
-                    {cat.replace("-", " ")}
+                    {category.replace("-", " ")}
                 </Button>
             {/each}
         </div>
@@ -110,7 +114,7 @@
             <div
                 class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted mb-4"
             >
-                <search class="w-8 h-8 text-muted-foreground" />
+                <search class="w-8 h-8 text-muted-foreground"></search>
             </div>
             <h3 class="text-xl font-semibold mb-2">No templates found</h3>
             <p class="text-muted-foreground mb-6">

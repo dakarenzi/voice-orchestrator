@@ -1,17 +1,23 @@
 <script lang="ts">
     import { page } from "$app/stores";
     import { getTemplateBySlug } from "$lib/templates/registry";
-    import { Button } from "$lib/components/ui/button";
-    import { Badge } from "$lib/components/ui/badge";
+    import Button from "$lib/components/ui/Button.svelte";
+    import Badge from "$lib/components/ui/Badge.svelte";
+    import Card from "$lib/components/ui/Card.svelte";
+    import CardHeader from "$lib/components/ui/CardHeader.svelte";
+    import CardContent from "$lib/components/ui/CardContent.svelte";
     import {
         ArrowLeft,
         Play,
-        CheckCircle2,
         Shield,
         Zap,
-        Globe,
+        CheckCircle2,
         MessageSquare,
+        Calendar,
+        Globe,
         Phone,
+        Settings,
+        Activity,
     } from "lucide-svelte";
     import { fade, fly } from "svelte/transition";
 

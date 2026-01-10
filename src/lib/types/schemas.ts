@@ -52,7 +52,8 @@ export const wizardSchema = z.object({
     step2: knowledgeBaseSchema,
     step3: z.object({
         crm: crmIntegrationSchema.optional(),
-        calendar: calendarIntegrationSchema.optional()
+        calendar: calendarIntegrationSchema.optional(),
+        webhookUrl: z.string().url().optional().or(z.literal(""))
     }).optional(),
     step4: voiceConfigSchema
 });

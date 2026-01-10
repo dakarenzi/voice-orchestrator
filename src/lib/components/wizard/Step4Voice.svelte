@@ -1,14 +1,8 @@
 <script lang="ts">
-    import { Label } from "$lib/components/ui/label";
-    import { Slider } from "$lib/components/ui/slider";
-    import { Button } from "$lib/components/ui/button";
-    import {
-        Select,
-        SelectContent,
-        SelectItem,
-        SelectTrigger,
-        SelectValue,
-    } from "$lib/components/ui/select";
+    import Label from "$lib/components/ui/Label.svelte";
+    import Slider from "$lib/components/ui/Slider.svelte";
+    import Button from "$lib/components/ui/Button.svelte";
+    import Select from "$lib/components/ui/Select.svelte";
     import { Play, Pause, Mic2, Activity } from "lucide-svelte";
     import type { WizardData } from "$lib/types/schemas";
 
@@ -66,31 +60,13 @@
         <div class="space-y-6">
             <div class="space-y-2">
                 <Label>Select Voice</Label>
-                <Select
-                    selected={{
-                        value: data.voiceId,
-                        label: voices.find((v) => v.id === data.voiceId)?.name,
-                    }}
-                    onSelectedChange={(v) => (data.voiceId = v?.value)}
-                >
-                    <SelectTrigger class="w-full">
-                        <SelectValue placeholder="Choose a voice" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {#each voices as voice}
-                            <SelectItem value={voice.id}>
-                                <div
-                                    class="flex items-center justify-between w-full min-w-[200px]"
-                                >
-                                    <span>{voice.name}</span>
-                                    <span
-                                        class="text-xs text-muted-foreground ml-2"
-                                        >({voice.gender} - {voice.style})</span
-                                    >
-                                </div>
-                            </SelectItem>
-                        {/each}
-                    </SelectContent>
+                <Select bind:value={data.voiceId} placeholder="Choose a voice">
+                    <option value="" disabled selected>Choose a voice</option>
+                    {#each voices as voice}
+                        <option value={voice.id}>
+                            {voice.name} ({voice.gender} - {voice.style})
+                        </option>
+                    {/each}
                 </Select>
             </div>
 
@@ -148,7 +124,8 @@
                     >
                 </div>
                 <Slider
-                    bind:value={[data.speed]}
+                    value={[data.speed]}
+                    onValueChange={(v) => (data.speed = v[0])}
                     min={0.5}
                     max={1.5}
                     step={0.1}
@@ -162,7 +139,13 @@
                         >{data.pitch > 0 ? "+" : ""}{data.pitch}</span
                     >
                 </div>
-                <Slider bind:value={[data.pitch]} min={-10} max={10} step={1} />
+                <Slider
+                    value={[data.pitch]}
+                    onValueChange={(v) => (data.pitch = v[0])}
+                    min={-10}
+                    max={10}
+                    step={1}
+                />
             </div>
 
             <div class="space-y-4">
@@ -173,7 +156,8 @@
                     >
                 </div>
                 <Slider
-                    bind:value={[data.stability]}
+                    value={[data.stability]}
+                    onValueChange={(v) => (data.stability = v[0])}
                     min={0}
                     max={1}
                     step={0.05}

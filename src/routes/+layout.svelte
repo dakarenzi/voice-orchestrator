@@ -7,6 +7,8 @@
     import { theme } from "$lib/stores/theme";
     import { ClerkProvider } from "svelte-clerk";
 
+    import { env } from "$env/dynamic/public";
+
     let { children, data } = $props();
 
     onMount(() => {
@@ -28,7 +30,7 @@
     />
 </svelte:head>
 
-<ClerkProvider {data}>
+<ClerkProvider {data} publishableKey={env.PUBLIC_CLERK_PUBLISHABLE_KEY}>
     {@render children?.()}
 </ClerkProvider>
 

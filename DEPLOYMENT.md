@@ -44,3 +44,5 @@ Ensure these are set in Cloudflare Pages settings:
 - `INWORLD_API_KEY`
 - `INWORLD_SCENE`
 - `ELEVENLABS_API_KEY`
+- `PUBLIC_CLERK_PUBLISHABLE_KEY`
+- `CLERK_SECRET_KEY`

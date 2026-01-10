@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { Label } from "$lib/components/ui/label";
-    import { Button } from "$lib/components/ui/button";
-    import { Card } from "$lib/components/ui/card";
+    import Label from "$lib/components/ui/Label.svelte";
+    import Button from "$lib/components/ui/Button.svelte";
+    import Card from "$lib/components/ui/Card.svelte";
     import { CheckCircle2, AlertCircle, Terminal, Rocket } from "lucide-svelte";
     import type { WizardData } from "$lib/types/schemas";
 

@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { Label } from "$lib/components/ui/label";
-    import { Input } from "$lib/components/ui/input";
-    import { Textarea } from "$lib/components/ui/textarea";
-    import { Button } from "$lib/components/ui/button";
+    import Label from "$lib/components/ui/Label.svelte";
+    import Input from "$lib/components/ui/Input.svelte";
+    import Textarea from "$lib/components/ui/Textarea.svelte";
+    import Button from "$lib/components/ui/Button.svelte";
     import { Plus, Trash2, FileText, Globe } from "lucide-svelte";
     import type { WizardData } from "$lib/types/schemas";
 

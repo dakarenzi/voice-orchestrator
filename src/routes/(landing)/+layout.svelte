@@ -68,7 +68,7 @@
                     {/if}
                 </button>
 
-                <div class="hidden md:flex items-center gap-4">
+                <div class="flex items-center gap-4">
                     <SignedOut>
                         <Button href="/sign-in" variant="ghost" size="sm"
                             >Sign In</Button

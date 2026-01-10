@@ -2,7 +2,7 @@
     import { page } from "$app/stores";
     import { getTemplateBySlug } from "$lib/templates/registry";
     import { type WizardData } from "$lib/types/schemas";
-    import { Button } from "$lib/components/ui/button";
+    import Button from "$lib/components/ui/Button.svelte";
     import { toast } from "svelte-sonner";
     import { fade } from "svelte/transition";
     import { Check, ChevronRight, ChevronLeft } from "lucide-svelte";

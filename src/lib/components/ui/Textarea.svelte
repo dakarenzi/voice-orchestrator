@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { HTMLTextareaAttributes } from 'svelte/elements';
+    import type { HTMLTextareaAttributes } from "svelte/elements";
 
     interface Props extends HTMLTextareaAttributes {
         value?: string;
@@ -8,8 +8,8 @@
     let { value = $bindable(), class: className, ...rest }: Props = $props();
 </script>
 
-<textarea 
+<textarea
     bind:value
-    class={`flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${className || ''}`} 
-    {...rest} 
-/>
+    class={`flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${className || ""}`}
+    {...rest}
+></textarea>
