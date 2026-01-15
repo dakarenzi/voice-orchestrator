@@ -10,12 +10,32 @@ export interface AgentConfig {
     systemPrompt: string;
 }
 
+// Flattened Agent Schema
 export interface Agent {
     id: string;
+    tenantId: string;
     name: string;
-    config: AgentConfig;
+    description?: string;
+
+    // Voice
+    voiceProvider: string;
+    voiceId: string;
+    voiceConfig?: Record<string, any>;
+
+    // LLM
+    llmProvider: string;
+    llmModel: string;
+    systemPrompt: string;
+
+    // Config
+    tools: string[];
+    channels: string[];
+
     status: AgentStatus;
-    created_at: number;
+    templateId?: string;
+
+    createdAt: number;
+    updatedAt: number;
 }
 
 export interface Message {

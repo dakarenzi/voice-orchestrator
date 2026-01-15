@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { Users, Plus, Edit, Trash2 } from "lucide-svelte";
+    import { Users, Plus, Edit, Trash2, Play, X } from "lucide-svelte";
+    import AgentPreview from "$lib/components/agents/AgentPreview.svelte";
     import Button from "$lib/components/ui/Button.svelte";
     import Card from "$lib/components/ui/Card.svelte";
     import CardContent from "$lib/components/ui/CardContent.svelte";
@@ -13,6 +14,13 @@
     let agents = $state<Agent[]>([]);
     let isLoading = $state(true);
     let error = $state<string | null>(null);
+    let showPreview = $state(false);
+    let selectedAgent = $state<Agent | null>(null);
+
+    function handlePreview(agent: Agent) {
+        selectedAgent = agent;
+        showPreview = true;
+    }
 
     onMount(async () => {
         try {
@@ -136,6 +144,17 @@
                                     ><Trash2 size={14} /></Button
                                 >
                             </div>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                class="h-8 text-acn-primary hover:bg-acn-primary/10 gap-1 ml-auto"
+                                onclick={(e: MouseEvent) => {
+                                    e.stopPropagation();
+                                    handlePreview(agent);
+                                }}
+                            >
+                                <Play size={14} /> Preview
+                            </Button>
                         </div>
                     </CardContent>
                 </Card>
@@ -149,6 +168,33 @@
                 <Plus size={32} class="mb-2" />
                 <span class="font-medium">Create New Agent</span>
             </a>
+        </div>
+    {/if}
+
+    {#if showPreview && selectedAgent}
+        <div
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+        >
+            <div
+                class="relative w-full max-w-md animate-in zoom-in-95 duration-200"
+                role="dialog"
+                aria-modal="true"
+            >
+                <button
+                    class="absolute -top-12 right-0 text-white hover:text-gray-200 transition-colors bg-white/10 p-2 rounded-full backdrop-blur-md"
+                    onclick={() => {
+                        showPreview = false;
+                        selectedAgent = null;
+                    }}
+                >
+                    <X size={24} />
+                </button>
+                <AgentPreview
+                    agentId={selectedAgent.id}
+                    agentName={selectedAgent.name}
+                    agentType={selectedAgent.voiceProvider ? "voice" : "chat"}
+                />
+            </div>
         </div>
     {/if}
 </div>
