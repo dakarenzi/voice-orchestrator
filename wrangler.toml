@@ -7,6 +7,11 @@ pages_build_output_dir = ".svelte-kit/cloudflare"
 # Local development settings (optional)
 # port = 8787
 
+[[d1_databases]]
+binding = "DB"
+database_name = "voice-orchestrator-db"
+database_id = "5e9ae69b-0d27-464a-9f07-5f1a176cdce2"
+
 [[headers]]
 for = "/*.css"
   [headers.values]

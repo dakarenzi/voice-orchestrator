@@ -107,8 +107,18 @@
                         >
                             {voice.provider}
                         </span>
-                        <Button variant="outline" size="sm" class="h-8">
-                            Select
+                        <Button
+                            variant={voiceStore.selectedVoiceId === voice.id
+                                ? "primary"
+                                : "outline"}
+                            size="sm"
+                            class="h-8"
+                            onclick={() =>
+                                (voiceStore.selectedVoiceId = voice.id)}
+                        >
+                            {voiceStore.selectedVoiceId === voice.id
+                                ? "Selected"
+                                : "Select"}
                         </Button>
                     </div>
                 </div>

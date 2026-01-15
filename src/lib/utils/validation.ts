@@ -1,17 +1,23 @@
 import { z } from 'zod';
 
-export const AgentConfigSchema = z.object({
-  voiceProvider: z.enum(['elevenlabs', 'cartesia', 'google']),
-  voiceId: z.string().min(1),
-  sttProvider: z.enum(['deepgram']),
-  llmProvider: z.enum(['inworld', 'openai']),
-  systemPrompt: z.string()
-});
-
+// Flattened schema for production
 export const CreateAgentSchema = z.object({
   name: z.string().min(2).max(50),
-  phoneNumber: z.string().optional(),
-  config: AgentConfigSchema
+  description: z.string().optional(),
+
+  // Flattened Config
+  voiceProvider: z.enum(['deepgram', 'elevenlabs', 'cartesia', 'inworld']),
+  voiceId: z.string().min(1),
+  voiceConfig: z.record(z.any()).optional(),
+
+  llmProvider: z.enum(['anthropic', 'openai']),
+  llmModel: z.string().default('gpt-4-turbo'),
+  systemPrompt: z.string().min(10),
+
+  tools: z.array(z.string()).default([]),
+  channels: z.array(z.enum(['web', 'phone', 'whatsapp'])).default(['web']),
+
+  templateId: z.string().optional()
 });
 
 export const UpdateAgentSchema = CreateAgentSchema.partial().extend({

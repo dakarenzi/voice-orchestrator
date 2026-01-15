@@ -6,23 +6,26 @@
     import Badge from "$lib/components/ui/Badge.svelte";
     import AgentStatus from "$lib/components/AgentStatus.svelte";
 
-    // Mock Agents
-    let agents = [
-        {
-            id: "1",
-            name: "Customer Support Bot",
-            status: "active" as const,
-            type: "inbound",
-            model: "Inworld",
-        },
-        {
-            id: "2",
-            name: "Sales Representative",
-            status: "idle" as const,
-            type: "outbound",
-            model: "Inworld",
-        },
-    ];
+    import { onMount } from "svelte";
+
+    import type { Agent } from "$lib/types";
+
+    let agents = $state<Agent[]>([]);
+    let isLoading = $state(true);
+    let error = $state<string | null>(null);
+
+    onMount(async () => {
+        try {
+            const res = await fetch("/api/agents");
+            if (!res.ok) throw new Error("Failed to fetch agents");
+            agents = await res.json();
+        } catch (e: any) {
+            console.error(e);
+            error = e.message;
+        } finally {
+            isLoading = false;
+        }
+    });
 </script>
 
 <div class="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-500">
@@ -38,7 +41,17 @@
         >
     </div>
 
-    {#if agents.length === 0}
+    {#if isLoading}
+        <div class="flex justify-center items-center py-20">
+            <div
+                class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"
+            ></div>
+        </div>
+    {:else if error}
+        <div class="text-center text-red-500 py-10">
+            Error: {error}
+        </div>
+    {:else if agents.length === 0}
         <div
             class="text-center py-24 border-2 border-dashed border-brd-default rounded-xl bg-bg-surface-raised/30"
         >
@@ -77,22 +90,36 @@
                             >
                                 <Users size={24} />
                             </div>
-                            <AgentStatus status={agent.status} />
+                            <AgentStatus
+                                status={agent.status === "inactive"
+                                    ? "idle"
+                                    : agent.status === "maintenance"
+                                      ? "error"
+                                      : agent.status}
+                            />
                         </div>
 
                         <div>
                             <h3 class="font-bold text-lg text-txt-primary">
                                 {agent.name}
                             </h3>
-                            <p class="text-sm text-txt-muted">
-                                Powered by {agent.model}
+                            <p
+                                class="text-sm text-txt-muted text-transform-capitalize"
+                            >
+                                Powered by <span class="capitalize"
+                                    >{agent.llmProvider || "Unknown"}</span
+                                >
                             </p>
                         </div>
 
                         <div
                             class="pt-4 border-t border-brd-subtle flex items-center justify-between text-sm text-txt-muted"
                         >
-                            <span class="capitalize">{agent.type} Call</span>
+                            <span class="capitalize"
+                                >{agent.channels.includes("phone")
+                                    ? "Phone Call"
+                                    : "Web Chat"}</span
+                            >
                             <div
                                 class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
                             >

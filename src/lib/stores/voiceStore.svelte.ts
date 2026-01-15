@@ -47,11 +47,11 @@ const MOCK_VOICES: VoiceProfile[] = [
     },
     {
         id: 'v4',
-        name: 'Deepgram Nova',
+        name: 'Deepgram Asteria',
         provider: 'deepgram',
-        externalId: 'nova-2',
-        gender: 'neutral',
-        accent: 'Transatlantic',
+        externalId: 'aura-asteria-en', // Correct Aura model ID
+        gender: 'female',
+        accent: 'American',
         description: 'Balanced and clear. Good for general purpose.',
         previewUrl: '#',
         tags: ['balanced', 'clear']
@@ -62,22 +62,49 @@ class VoiceStore {
     voices = $state<VoiceProfile[]>(MOCK_VOICES);
     selectedVoiceId = $state<string | null>(null);
     isPlaying = $state<string | null>(null); // ID of voice currently playing
+    audioElement: HTMLAudioElement | null = null;
 
     get selectedVoice() {
         return this.voices.find(v => v.id === this.selectedVoiceId);
     }
 
-    playPreview(id: string) {
-        if (this.isPlaying === id) {
+    async playPreview(id: string) {
+        // Stop current if playing
+        if (this.isPlaying) {
+            this.audioElement?.pause();
+            const wasPlaying = this.isPlaying;
             this.isPlaying = null;
-            // Stop audio logic would go here
-        } else {
-            this.isPlaying = id;
-            // Play audio logic would go here
-            // Mock stop after 3s
-            setTimeout(() => {
+            if (wasPlaying === id) return; // Toggle off
+        }
+
+        this.isPlaying = id;
+        const voice = this.voices.find(v => v.id === id);
+        if (!voice) return;
+
+        try {
+            const response = await fetch('/api/voice/voices/preview', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    voiceId: voice.externalId,
+                    text: `Hello, I am ${voice.name}. This is a preview of my voice.`
+                })
+            });
+
+            if (!response.ok) throw new Error('Preview failed');
+
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+
+            this.audioElement = new Audio(url);
+            this.audioElement.onended = () => {
                 if (this.isPlaying === id) this.isPlaying = null;
-            }, 3000);
+            };
+            await this.audioElement.play();
+
+        } catch (e) {
+            console.error('Failed to play preview', e);
+            this.isPlaying = null;
         }
     }
 

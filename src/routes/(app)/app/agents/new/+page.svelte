@@ -32,13 +32,13 @@
                 );
 
                 // Overwrite wizard store with template data
-                // Note: we append "(Copy)" to the name as per requirements
-                wizardStore.data.name = `${tData.name} (Copy)`;
-                wizardStore.data.config.behavior.systemPrompt =
-                    mapped.config.systemPrompt;
-                wizardStore.data.config.pipeline.llmProvider =
-                    mapped.config.llmProvider;
-                // Add other fields as necessary...
+                wizardStore.data.name = `${tData.name}`;
+                wizardStore.data.systemPrompt = mapped.systemPrompt;
+                wizardStore.data.llmProvider = mapped.llmProvider as any;
+                wizardStore.data.voiceId = mapped.voiceId;
+
+                // Set initial step to allow review
+                // wizardStore.currentStep = 'identity';
             }
         } else {
             // Only reset if NOT from template, to ensure clean slate for "New Agent"

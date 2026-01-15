@@ -1,0 +1,42 @@
+{
+    "$schema": "../node_modules/wrangler/config-schema.json",
+    "name": "voice-pipeline-unified",
+    "main": "voice-router.ts",
+    "compatibility_date": "2024-10-22",
+    "durable_objects": {
+        "bindings": [
+            {
+                "name": "VOICE_SESSION_UNIFIED",
+                "class_name": "VoiceSessionUnifiedDO",
+                "script_name": "voice-pipeline-unified"
+            }
+        ]
+    },
+    "services": [
+        {
+            "binding": "DEEPGRAM",
+            "service": "deepgram-unified"
+        }
+    ],
+    "d1_databases": [
+        {
+            "binding": "DB",
+            "database_name": "voice-orchestrator-db",
+            "database_id": "5e9ae69b-0d27-464a-9f07-5f1a176cdce2"
+        }
+    ],
+    "vars": {
+        "ENVIRONMENT": "production"
+    },
+    "observability": {
+        "enabled": true
+    },
+    "migrations": [
+        {
+            "tag": "v1",
+            "new_classes": [
+                "VoiceSessionUnifiedDO"
+            ]
+        }
+    ]
+}

@@ -14,6 +14,7 @@ declare global {
                 INWORLD_API_KEY: string;
                 INWORLD_SCENE: string;
                 ELEVENLABS_API_KEY: string;
+                DB: D1Database;
             }
             context: {
                 waitUntil(promise: Promise<any>): void;

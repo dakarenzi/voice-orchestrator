@@ -1,4 +1,4 @@
-import type { Agent, AgentConfig } from '$lib/types/index';
+import type { Agent } from '$lib/types/index';
 import type { AgentTemplate } from '$lib/types/template';
 
 /**
@@ -21,30 +21,30 @@ export function mapTemplateToAgent(
     // Helper to get nested or flat config
     const pipeline = t.pipeline || t.config?.pipeline || {};
     const voice = t.voice || t.config?.voice || {};
-    const behavior = t.behavior || t.config?.behavior || {};
 
-    // 1. Map Configuration
-    const agentConfig: AgentConfig = {
-        // 1.1 Voice Mapping
-        voiceProvider: (pipeline.ttsProvider as any) || 'elevenlabs',
-        voiceId: (voice.voiceId || voice.defaultVoiceProfileId) || 'default-voice-id', // V2 uses voiceId, V1 used defaultVoiceProfileId
+    // 1. Map Configuration variables for internal use
+    const voiceProvider = (pipeline.ttsProvider as any) || 'elevenlabs';
+    const voiceId = (voice.voiceId || voice.defaultVoiceProfileId) || 'default-voice-id';
+    const llmProvider = (pipeline.llmProvider as any) || 'openai';
+    const systemPrompt = buildSystemPrompt(t);
 
-        // 1.2 STT Mapping
-        sttProvider: 'deepgram',
-
-        // 1.3 LLM Mapping
-        llmProvider: (pipeline.llmProvider as any) || 'inworld',
-
-        // 1.4 Behavior / Prompt Mapping
-        systemPrompt: buildSystemPrompt(t),
-    };
-
-    // 2. Return the new Agent object
+    // 2. Return the new Agent object (Flat structure)
     return {
-        orgId: orgId,
+        tenantId: orgId,
         name: template.name,
-        status: 'inactive',
-        config: agentConfig,
+        description: template.description || '',
+        status: 'idle',
+
+        voiceProvider,
+        voiceId,
+        voiceConfig: {},
+
+        llmProvider,
+        llmModel: 'gpt-4-turbo',
+        systemPrompt,
+
+        tools: [],
+        channels: ['web']
     };
 }
 

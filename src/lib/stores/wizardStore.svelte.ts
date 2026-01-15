@@ -88,10 +88,52 @@ class WizardStore {
     async save() {
         this.isSaving = true;
         try {
-            // Mock API call
-            console.log('Saving agent:', $state.snapshot(this.data));
-            await new Promise(r => setTimeout(r, 1000));
+            // Find the selected voice to get its provider
+            const voiceStoreModule = await import('./voiceStore.svelte');
+            const voiceStore = voiceStoreModule.voiceStore;
+            const selectedVoice = voiceStore.voices.find(v => v.id === this.data.voiceId);
+
+            // Construct payload matching flattened CreateAgentSchema
+            const payload = {
+                name: this.data.name,
+                description: `Agent for ${this.data.role}`,
+
+                voiceProvider: selectedVoice?.provider || 'elevenlabs',
+                voiceId: selectedVoice?.externalId || this.data.voiceId || 'default',
+                voiceConfig: {},
+
+                llmProvider: this.data.llmProvider === 'anthropic' ? 'openai' : this.data.llmProvider,
+                llmModel: 'gpt-4-turbo',
+                systemPrompt: this.data.systemPrompt,
+
+                tools: [],
+                channels: ['web'],
+                templateId: undefined
+            };
+
+            const response = await fetch('/api/agents', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                console.error('Failed to create agent:', error);
+                throw new Error(error.error || 'Failed to create agent');
+            }
+
+            const result = await response.json();
+            console.log('Agent created:', result);
+
+            // Wait a small delay to ensure DB propagation if needed, then redirect
+            await new Promise(r => setTimeout(r, 500));
             goto('/app/agents');
+        } catch (error) {
+            console.error('Error saving agent:', error);
+            alert('Failed to save agent. Please try again.'); // Simple error feedback
         } finally {
             this.isSaving = false;
         }
