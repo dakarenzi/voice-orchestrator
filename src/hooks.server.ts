@@ -9,9 +9,11 @@ const clerkHandle = withClerkHandler({
     signUpUrl: '/sign-up',
 });
 
-export const handle: Handle = sequence(clerkHandle);
-
-// Temporary bypass
-// export const handle: Handle = async ({ event, resolve }) => {
-//     return resolve(event);
-// };
+// Defensive handle: Only run Clerk if keys are present
+export const handle: Handle = async ({ event, resolve }) => {
+    if (!env.CLERK_SECRET_KEY) {
+        console.error('CRITICAL: CLERK_SECRET_KEY is missing from environment. Bypassing auth.');
+        return resolve(event);
+    }
+    return clerkHandle({ event, resolve });
+};
