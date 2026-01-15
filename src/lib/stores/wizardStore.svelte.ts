@@ -131,9 +131,9 @@ class WizardStore {
             // Wait a small delay to ensure DB propagation if needed, then redirect
             await new Promise(r => setTimeout(r, 500));
             goto('/app/agents');
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error saving agent:', error);
-            alert('Failed to save agent. Please try again.'); // Simple error feedback
+            alert(`Failed to save agent: ${error.message || 'Unknown error'}`);
         } finally {
             this.isSaving = false;
         }
