@@ -47,7 +47,8 @@ export const GET: RequestHandler = async ({ platform, url }) => {
       status: row.status,
       templateId: row.template_id,
       createdAt: row.created_at,
-      updatedAt: row.updated_at
+      updatedAt: row.updated_at,
+      sttProvider: 'deepgram' // Hardcoded default
     }));
 
     return json(agents);
@@ -105,10 +106,70 @@ export const POST: RequestHandler = async ({ request, platform }) => {
       now
     ).run();
 
-    return json({ id, ...data, status: 'idle', createdAt: now, updatedAt: now }, { status: 201 });
+    return json({ id, ...data, sttProvider: 'deepgram', status: 'idle', createdAt: now, updatedAt: now }, { status: 201 });
   } catch (e: any) {
     console.error('POST /api/agents error:', e);
     // Return more details about the error (e.g. constraint failed)
+    return json({ error: e.message, cause: e.cause }, { status: 500 });
+  }
+};
+
+export const PUT: RequestHandler = async ({ request, platform }) => {
+  const db = platform?.env?.DB;
+  try {
+    const body = await request.json();
+    const { id, ...updates } = body;
+
+    if (!id) {
+      return json({ error: 'Agent ID is required' }, { status: 400 });
+    }
+
+    // Use CreateAgentSchema for validation as Update is basically a partial create but we usually send full object from builder
+    // Or we can use UpdateAgentSchema for partial updates. 
+    // The builder sends the FULL agent object, so CreateAgentSchema (or partial) is fine.
+    // Let's safeParse with checks.
+
+    // Construct update query dynamically or fixed set
+    const now = Date.now();
+
+    // Ideally we validate the payload. 
+    // const validation = CreateAgentSchema.partial().safeParse(updates);
+
+    await db.prepare(`
+      UPDATE agents SET
+        name = coalesce(?, name),
+        description = coalesce(?, description),
+        voice_provider = coalesce(?, voice_provider),
+        voice_id = coalesce(?, voice_id),
+        voice_config = coalesce(?, voice_config),
+        llm_provider = coalesce(?, llm_provider),
+        llm_model = coalesce(?, llm_model),
+        system_prompt = coalesce(?, system_prompt),
+        tools = coalesce(?, tools),
+        channels = coalesce(?, channels),
+        status = coalesce(?, status),
+        updated_at = ?
+      WHERE id = ?
+    `).bind(
+      updates.name,
+      updates.description || null,
+      updates.voiceProvider,
+      updates.voiceId,
+      updates.voiceConfig ? JSON.stringify(updates.voiceConfig) : null,
+      updates.llmProvider,
+      updates.llmModel,
+      updates.systemPrompt,
+      updates.tools ? JSON.stringify(updates.tools) : null,
+      updates.channels ? JSON.stringify(updates.channels) : null,
+      updates.status,
+      now,
+      id
+    ).run();
+
+    return json({ success: true, id, updatedAt: now });
+
+  } catch (e: any) {
+    console.error('PUT /api/agents error:', e);
     return json({ error: e.message, cause: e.cause }, { status: 500 });
   }
 };

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
   import { builderStore } from "$lib/stores/agentBuilder";
   import {
     Mic,
@@ -74,13 +75,35 @@
   let saving = $state(false);
   let showPreview = $state(false);
 
+  onMount(async () => {
+    const agentId = $page.url.searchParams.get("id");
+    if (agentId) {
+      try {
+        const res = await fetch(`/api/agents?id=${agentId}`); // Note: API might need adjustment to get single by ID or filter list
+        // Actually, /api/agents returns list. We can filter client side or add logic.
+        // Let's assume for now we fetch all and find, or assume single fetch if param provided.
+        // Checking +server.ts: GET returns all.
+        const allAgents = await res.json();
+        const found = allAgents.find((a: any) => a.id === agentId);
+        if (found) {
+          builderStore.setAgent(found);
+        }
+      } catch (e) {
+        console.error("Failed to load agent", e);
+      }
+    }
+  });
+
   async function handleSave(redirect = true) {
     saving = true;
     try {
+      const agent = $builderStore.agent;
+      const method = agent.id ? "PUT" : "POST";
+
       const res = await fetch("/api/agents", {
-        method: "POST",
+        method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify($builderStore.agent),
+        body: JSON.stringify(agent),
       });
       if (res.ok) {
         if (redirect) goto("/app/agents");
@@ -120,7 +143,7 @@
     if (data) {
       const provider = JSON.parse(data);
       if (provider.type === targetType) {
-        // Map drag type to config key
+        // Map drag type to flattened key
         const key =
           targetType === "stt"
             ? "sttProvider"
@@ -292,7 +315,7 @@
             <div>
               <div class="font-semibold">Input (STT)</div>
               <div class="text-xs text-acn-primary font-medium capitalize">
-                {$builderStore.agent.config?.sttProvider}
+                {$builderStore.agent.sttProvider}
               </div>
             </div>
           </div>
@@ -317,7 +340,7 @@
             <div>
               <div class="font-semibold">Brain (LLM)</div>
               <div class="text-xs text-acn-primary font-medium capitalize">
-                {$builderStore.agent.config?.llmProvider}
+                {$builderStore.agent.llmProvider}
               </div>
             </div>
           </div>
@@ -342,7 +365,7 @@
             <div>
               <div class="font-semibold">Output (TTS)</div>
               <div class="text-xs text-acn-primary font-medium capitalize">
-                {$builderStore.agent.config?.voiceProvider}
+                {$builderStore.agent.voiceProvider}
               </div>
             </div>
           </div>
@@ -419,7 +442,7 @@
         <AgentPreview
           agentId={$builderStore.agent.id || "preview"}
           agentName={$builderStore.agent.name || "Agent"}
-          agentType={$builderStore.agent.config?.sttProvider ? "voice" : "chat"}
+          agentType={$builderStore.agent.sttProvider ? "voice" : "chat"}
         />
       </div>
     </div>

@@ -132,6 +132,7 @@
                                 class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
                             >
                                 <Button
+                                    href={`/app/agents/builder?id=${agent.id}`}
                                     variant="ghost"
                                     size="icon"
                                     class="h-8 w-8 text-txt-secondary hover:text-txt-primary"

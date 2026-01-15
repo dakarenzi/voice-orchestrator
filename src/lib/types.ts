@@ -21,6 +21,7 @@ export interface Agent {
     voiceProvider: string;
     voiceId: string;
     voiceConfig?: Record<string, any>;
+    sttProvider?: string;
 
     // LLM
     llmProvider: string;
