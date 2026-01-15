@@ -14,7 +14,10 @@
     GripVertical,
     Check,
     Activity,
+    X,
+    Play,
   } from "lucide-svelte";
+  import AgentPreview from "$lib/components/agents/AgentPreview.svelte";
 
   // Import sub-components
   import ChannelConfig from "$lib/components/builder/ChannelConfig.svelte";
@@ -68,9 +71,10 @@
     },
   ];
 
-  let saving = false;
+  let saving = $state(false);
+  let showPreview = $state(false);
 
-  async function handleSave() {
+  async function handleSave(redirect = true) {
     saving = true;
     try {
       const res = await fetch("/api/agents", {
@@ -79,12 +83,26 @@
         body: JSON.stringify($builderStore.agent),
       });
       if (res.ok) {
-        goto("/app/agents");
+        if (redirect) goto("/app/agents");
+        return true;
+      } else {
+        const err = await res.json();
+        alert(`Failed to save agent: ${err.error || "Unknown error"}`);
+        return false;
       }
     } catch (e) {
       console.error(e);
+      alert("Failed to save agent. Please try again.");
+      return false;
     } finally {
       saving = false;
+    }
+  }
+
+  async function handlePreview() {
+    const success = await handleSave(false);
+    if (success) {
+      showPreview = true;
     }
   }
 
@@ -150,8 +168,14 @@
     </div>
     <div class="flex gap-2">
       <button
+        class="px-4 py-2 bg-bg-surface border border-brd-default hover:bg-bg-surface-raised text-txt-primary rounded-md flex items-center gap-2 font-medium transition-colors"
+        onclick={handlePreview}
+      >
+        <Play size={16} /> Preview
+      </button>
+      <button
         class="px-4 py-2 bg-acn-primary text-txt-inverse rounded-md flex items-center gap-2 font-bold shadow-lg shadow-acn-primary/20"
-        onclick={handleSave}
+        onclick={() => handleSave(true)}
       >
         {#if saving}
           <Activity size={16} class="animate-spin" /> Saving...
@@ -376,4 +400,28 @@
       {/if}
     </aside>
   </div>
+
+  {#if showPreview}
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+    >
+      <div
+        class="relative w-full max-w-md animate-in zoom-in-95 duration-200"
+        role="dialog"
+        aria-modal="true"
+      >
+        <button
+          class="absolute -top-12 right-0 text-white hover:text-gray-200 transition-colors bg-white/10 p-2 rounded-full backdrop-blur-md"
+          onclick={() => (showPreview = false)}
+        >
+          <X size={24} />
+        </button>
+        <AgentPreview
+          agentId={$builderStore.agent.id || "preview"}
+          agentName={$builderStore.agent.name || "Agent"}
+          agentType={$builderStore.agent.config?.sttProvider ? "voice" : "chat"}
+        />
+      </div>
+    </div>
+  {/if}
 </div>

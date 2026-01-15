@@ -72,6 +72,12 @@ export const POST: RequestHandler = async ({ request, platform }) => {
     const now = Date.now();
     const tenantId = 'org_demo'; // Placeholder
 
+    // Ensure tenant exists (Foreign Key Constraint)
+    await db.prepare(`
+      INSERT OR IGNORE INTO tenants (id, name, created_at, updated_at)
+      VALUES (?, ?, ?, ?)
+    `).bind(tenantId, 'Demo Org', now, now).run();
+
     await db.prepare(`
       INSERT INTO agents (
         id, tenant_id, name, description, 
@@ -102,6 +108,7 @@ export const POST: RequestHandler = async ({ request, platform }) => {
     return json({ id, ...data, status: 'idle', createdAt: now, updatedAt: now }, { status: 201 });
   } catch (e: any) {
     console.error('POST /api/agents error:', e);
-    return json({ error: e.message }, { status: 500 });
+    // Return more details about the error (e.g. constraint failed)
+    return json({ error: e.message, cause: e.cause }, { status: 500 });
   }
 };
